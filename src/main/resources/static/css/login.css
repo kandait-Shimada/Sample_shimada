@@ -1,0 +1,108 @@
+@charset "UTF-8";
+
+/* タイトル */
+h1 {
+	text-align:center;
+	font-size: 48px;
+	margin: 2.5% 0;
+}
+
+/* サブタイトル */
+h2 {
+	
+	font-size: 24px;
+	margin: 1.5% 0;
+}
+
+/* サブタイトル */
+h3 {
+	text-align:center;
+	font-size: 24px;
+	margin: 1.5% 0;
+}
+
+/* form全体 */
+.login-form {
+	width: 100%;
+}
+
+/* ログインID、PW全体 */
+.login-box {
+	width: 30%;
+	margin: 0 auto;
+	padding: 2%;
+}
+
+/* ログインID、PW共通部分 */
+.login-form-box {
+	display: flex;
+    align-items: center;
+	margin-bottom: 5%;
+	border-width: thin;
+	border: solid 2px #ccc;
+}
+
+
+/* 入力部分 */
+.login-text-box {
+	width: 100%;
+	padding: 5px;
+	font-size: 18px;
+	border: none;
+	outline: none; /* クリック時の枠線を消す */
+	margin: 1.5%;
+}
+
+/* 送信ボタン */
+.login-btn {
+	width: 180px;
+	display: block;
+  	color: #fff;
+  	background: #000;
+  	transition: 0.4s;
+  	cursor: pointer;
+  	font-size: 18px;
+  	padding: 2.5% 5%;
+  	margin: 10% auto;
+}
+
+/* 送信ボタン(カーソルが乗っているとき) */
+.login-btn:hover {
+	color: #000;
+	background-color: white;
+	transition: 0.4s;
+}
+
+/* アイコン */
+.fa {
+	padding-right: 5px;
+}
+
+/* 新規登録文章 */
+.login-form p {
+	text-align: center;
+}
+
+/* 新規登録文章中のボタン */
+.login-form p a {
+	border-bottom: 1px solid black; 
+}
+
+/* 新規登録文章中のボタン(カーソルが乗っているとき) */
+.login-form p a:hover {
+	color: red;
+	border-bottom: 1px solid red; 
+	transition: 0.4s;
+}
+
+/* 目のアイコン */
+.fa-eye,
+.fa-eye-slash {
+	cursor: pointer;
+}
+
+.error-message {
+    color: red;
+    text-align: center;
+    font-size: 20px;
+}

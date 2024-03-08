@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8">
+<title>登録成功</title>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.11.2/css/all.css">
+<link rel="stylesheet" type="text/css" th:href="@{/css/reset.css}">
+<link rel="stylesheet" type="text/css" th:href="@{/css/common.css}">
+<link rel="stylesheet" type="text/css" th:href="@{/css/login.css}">
+
+</head>
+<body>
+<h1>登録成功</h1>
+<!-- 登録したUSERNAMEを表示 -->
+<h3>
+<p th:text="'登録したUSERNAME: ' + ${registeredUsername}"></p>
+<p th:text="'登録したPASSWORD: ' + ${registeredPassword}"></p>
+<a href="#"	th:href="@{/login}">ログイン画面へ</a>
+</h3>
+</body>
+</html>

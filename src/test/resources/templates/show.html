@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html xmlns:th="http://thymeleaf.org">
+<head>
+<meta charset="UTF-8">
+<title>th:text="#{title}"</title>
+<style>
+    .logout-container {
+        position: absolute;
+        right: 0;
+        bottom: 0;
+        margin: 20px;
+    }
+    .logout-button {
+       width: 90px;
+	display: block;
+  	color: #fff;
+  	background: #000;
+  	transition: 0.4s;
+  	cursor: pointer;
+  	font-size: 18px;
+  	padding: 2.5% 5%;
+  	margin: 10% auto;
+    }
+</style>    
+</head>
+<body>
+	<h1 th:text="#{title}"></h1>
+	<p th:unless="${#lists.isEmpty(list)}" th:text="#{YesTable}"></p> <!-- 追加 -->
+	<p th:if="${#lists.isEmpty(list)}" th:text="#{NoTable}"></p>
+	<table border="1" th:unless="${#lists.isEmpty(list)}" style="table-layout: fixed;">
+		<tr>
+			<th>ID</th>
+			<th>名前</th>
+			<th>性別</th>
+			<th>年齢</th>
+			<th>編集</th>
+			<th>削除</th>
+		</tr>
+		<tr th:each="obj : ${list}" align="center">
+			<td th:text="${obj.id}"></td>
+			<td th:text="${obj.name}"></td>
+			<td th:text="${obj.gender} == 0? '男性' : '女性'"></td>
+			<td th:text="${obj.age}"></td>
+			<!-- 編集ボタン -->
+			<td>
+				<form method="get" th:action="@{sample/{id}(id=${obj.id})}">
+					<input type="submit" value="編集">
+				</form>
+			</td>
+			<!-- 削除ボタン -->
+			<td>
+				<form method="post" th:action="@{sample/delete}">
+					<input type="hidden" name="id" th:value="${obj.id}">
+					<input type="submit" value="削除">
+				</form>
+			</td>
+            <!--------------->
+		</tr>
+	</table>
+	<!-- 新規登録 -->
+	<!-- newSampleがtrueの場合、新規登録処理、そうではない場合、更新処理にそれぞれ変更します -->
+	<p th:if="${complete}" th:text="${complete}" style="color:blue"></p>
+	<form method="post"
+			th:action="${sampleForm.NewSample}? @{/sample/insert} : @{/sample/update}"
+			th:object="${sampleForm}">
+			<ul th:if="${#fields.hasErrors('*')}">
+	       		<li th:each="err : ${#fields.errors('*')}" th:text="${err}" style="color:red"></li>
+	       </ul>
+			<hr>
+			<label>名前：</label>
+			<input type="text" th:field="*{name}">		
+			<p th:each="err : ${#fields.errors('*{name}')}" th:text="${err}"></p>
+			<br>
+			<hr>
+			<label>男性：</label>
+			<input type="radio" value=0 th:field="*{gender}">		
+			<br>
+			<hr>
+			<label>女性：</label>
+			<input type="radio" value=0 th:field="*{gender}">		
+			<br>
+			<hr>
+			<label>年齢：</label>
+			<input type="number" th:field="*{age}">
+			<p th:each="err : ${#fields.errors('*{age}')}" th:text="${err}"></p>		
+			<br>
+			<br>
+			<input th:if="${id}" type="hidden" th:field="*{id}">
+			<input type="submit" value="送信">
+	</form>
+	<!-- 追加部分 -->
+	<p th:unless="${sampleForm.newSample}">
+		<a href="#"	th:href="@{/sample}">一覧画面へ戻る</a>	
+	</p>	
+	<div class="logout-container">
+        <a href="#" th:href="@{/login}" class="logout-button">ログアウト</a>
+    </div>
+</body>
+</html>
