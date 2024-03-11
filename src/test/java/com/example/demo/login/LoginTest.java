@@ -1,6 +1,7 @@
 package com.example.demo.login;
 
 import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.Mockito.*;
 
 import org.junit.jupiter.api.BeforeEach;
@@ -30,7 +31,7 @@ class LoginTest {
 	}
 
 	/*
-	 * 項番2
+	 * 項番3
 	 */
 	@Test
     void testLoginSuccess() {
@@ -39,11 +40,11 @@ class LoginTest {
         String result = loginController.login("test", "pass", model);
         
         assertEquals("redirect:/sample", result);
-
+        verify(model, never()).addAttribute(anyString(), any());
 	}
 
 	/*
-	 * 項番3
+	 * 項番4
 	 */
 	@Test
     void testLoginFailure() {
@@ -56,7 +57,7 @@ class LoginTest {
     }
 
 	/*
-	 * 項番4
+	 * 項番5
 	 */
 	@Test
     void testLoginThrowsException() {

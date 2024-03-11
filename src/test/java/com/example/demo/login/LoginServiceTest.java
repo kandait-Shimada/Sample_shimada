@@ -1,6 +1,7 @@
 package com.example.demo.login;
 
 import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.Mockito.*;
 
 import org.junit.jupiter.api.Test;
@@ -34,5 +35,20 @@ class LoginServiceTest {
 		boolean result = loginService.authenticate(username, password);
 
 		assertTrue(result);
+	}
+	
+	/*
+	 * 項番2
+	 */
+	@Test
+	void testAuthenticateFailure() {
+	    String username = "existingUser";
+	    String password = "newPass";
+	    when(loginRepository.findByUsernameAndPassword(username, password)).thenReturn(null);
+
+	    boolean result = loginService.authenticate(username, password);
+
+	    assertFalse(result);
+	    verify(loginRepository, never()).save(any(Login.class));
 	}
 }
