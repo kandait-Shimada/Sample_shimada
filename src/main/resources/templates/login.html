@@ -2,39 +2,56 @@
 <html xmlns:th="http://thymeleaf.org">
 <head>
 <meta charset="UTF-8">
-<title>ログイン画面</title>
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<!-- CSS読込 -->
+<link rel="stylesheet" th:href="@{/webjars/bootstrap/css/bootstrap.min.css}">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.11.2/css/all.css">
 <link rel="stylesheet" type="text/css" th:href="@{/css/reset.css}">
 <link rel="stylesheet" type="text/css" th:href="@{/css/common.css}">
 <link rel="stylesheet" type="text/css" th:href="@{/css/login.css}">
+<!-- JS読込 -->
+<script th:src="@{/webjars/jquery/jquery.min.js}" defer></script>
+<script th:src="@{/webjars/bootstrap/js/bootstrap.min.js}" defer></script>
+<title>ログイン画面</title>
 </head>
-<body>
-	<h1>ログイン画面</h1>
+
+<body class="bg-light bg-gradient">
+<div class="container">
+	<div class="text-center">
+		<h1>ログイン</h1>
 	<!-- ログイン用 -->
 	<!-- エラーメッセージ表示部分 -->
-<div th:if="${error}" class="error-message" style="color: red;">
-    <p th:text="${error}"></p>
-</div>
-	<form class="login-form" action="/login" method="post">
-		<div class="login-box">
-			<div class=login-form-box>
-				<input type="text" class="login-text-box fa" name="username" required="required" placeholder="&#xf007; USERNAME">
-			</div>
-			<div class=login-form-box>
-				<input type="password" id="textPassword" class="login-text-box fa" name="password" required="required" placeholder="&#xf084; PASSWORD">
-				<span id="buttonEye" class="fa fa-eye" onclick="pushHideButton()"></span>
-			</div>
-			<button type="submit" class="login-btn">
-				<i class="fa fa-arrow-right"></i>LOGIN
-			</button>
+		<div th:if="${error}" class="error-message" style="color: red;">
+    		<p th:text="${error}"></p>
 		</div>
-	</form>
+		<div class="row justify-content-center">
+        	<div class="col-md-6">		
+		<form method="post" action="/login" class="login-form">
+		
+			<!-- ユーザーID -->
+			<div class="form-group mb-3">
+				<label for="userName" class="sr-only">userName</label> <!-- sr-onlyを使用（bootstrapのバージョンが4なのでvisually-hidden未対応）-->
+				<input type="text" class="form-control" placeholder="ユーザーID" name="username">
+			</div>
+			<!-- パスワード -->
+			<div class="form-group mb-3">
+				<label for="password" class="sr-only">password</label>
+				<input type="password" class="form-control" placeholder="パスワード" name="password">
+			</div>
+		
+			</div>
+    	</div>
+			<input type="submit" value="ログイン" class="btn btn-primary mb-5">
+		</form>
+		
 	<!-- 新規登録用 -->
 	<form class="login-form">
 		<p>
-			まだ新規登録を行っていない方は<a href="#"	th:href="@{/signUp}">こちら</a>から
+			<a href="#"	th:href="@{/signUp}">まだ新規登録を行っていない方はこちらから</a>
 		</p>
 	</form>
+	</div>	
+</div>	
 </body>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 <script type="text/javascript" th:src="@{/js/changeTextPassword.js}"></script>
