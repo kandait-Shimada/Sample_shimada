@@ -58,8 +58,9 @@ class SignUpTest {
 	 */
 	private BindingResult createBindingResultWithErrors(String fieldName, String errorCode, String defaultMessage) {
 		BindingResult bindingResult = mock(BindingResult.class);
-		FieldError fieldError = new FieldError("loginForm", fieldName, defaultMessage);
+		FieldError fieldError = new FieldError("loginForm", fieldName, null, false, new String[]{errorCode}, null, defaultMessage);
 		when(bindingResult.hasErrors()).thenReturn(true);
+		when(bindingResult.hasFieldErrors(fieldName)).thenReturn(true);
 		when(bindingResult.getFieldError()).thenReturn(fieldError);
 		return bindingResult;
 	}
@@ -108,11 +109,12 @@ class SignUpTest {
 	 */
 	@Test
 	void testSignUpCharacterLimitCheck21() {
-		BindingResult bindingResult = createBindingResultWithErrors("username", "Size", "20文字以内で入力してください。");
+		String expectedErrorMessage = "ユーザー名は20文字以内で入力してください。";
+		BindingResult bindingResult = createBindingResultWithErrors("username", "Size", "ユーザー名は20文字以内で入力してください。");
 		String viewName = loginController.signUp(createValidLoginForm("characterlimitcheck21", "pass"), bindingResult,
 				model, redirectAttributes);
 		assertEquals("signUp", viewName);
-		verify(model, times(1)).addAttribute("error", "20文字以内で入力してください。");
+		verify(model, times(1)).addAttribute("error", expectedErrorMessage);
 	}
 
 	/*
@@ -120,12 +122,13 @@ class SignUpTest {
 	 */
 	@Test
 	void testSignUpCharacterLimitCheck22() {
-		BindingResult bindingResult = createBindingResultWithErrors("password", "Size", "20文字以内で入力してください。");
+		String expectedErrorMessage = "パスワードは20文字以内で入力してください。";
+		BindingResult bindingResult = createBindingResultWithErrors("password", "Size", "パスワードは20文字以内で入力してください。");
 		String viewName = loginController.signUp(createValidLoginForm("test", "characterlimitcheck21"), bindingResult,
 				model, redirectAttributes);
 
 		assertEquals("signUp", viewName);
-		verify(model, times(1)).addAttribute("error", "20文字以内で入力してください。");
+		verify(model, times(1)).addAttribute("error", expectedErrorMessage);
 	}
 
 	/*
@@ -138,7 +141,7 @@ class SignUpTest {
 	        String viewName = loginController.signUp(createValidLoginForm("test", "pass"), createBindingResult(), model, redirectAttributes);
 
 	        assertEquals("signUp", viewName);
-	        verify(model, times(1)).addAttribute("error", "このUSERNAMEは既に使用されています。");
+	        verify(model, times(1)).addAttribute("error", "このユーザー名は既に使用されています。");
 
 	    }
 
@@ -154,5 +157,53 @@ class SignUpTest {
 	        assertEquals("signUp", viewName);
 	        verify(model, times(1)).addAttribute("error", "データベースが確認できません。");
 	    }
+
+	/*
+	 * 項番10
+	 */
+	@Test
+	void testSignUpUserNameNullCheck() {
+		String expectedErrorMessage ="ユーザー名は入力必須です。";
+		String viewName = loginController.signUp(createValidLoginForm("", "pass"), createBindingResult(),
+				model, redirectAttributes);
+		assertEquals("signUp", viewName);
+		verify(model, times(1)).addAttribute("error", expectedErrorMessage);
+	}
+
+	/*
+	 * 項番11
+	 */
+	@Test
+	void testSignUpPasswordNullCheck() {
+		String expectedErrorMessage ="パスワードは入力必須です。";
+		String viewName = loginController.signUp(createValidLoginForm("test", ""), createBindingResult(),
+				model, redirectAttributes);
+		assertEquals("signUp", viewName);
+		verify(model, times(1)).addAttribute("error", expectedErrorMessage);
+	}
+	
+	/*
+	 * 項番12
+	 */
+	@Test
+	void testSignUpUserNameBlankCheck() {
+		String expectedErrorMessage ="ユーザー名は入力必須です。";
+		String viewName = loginController.signUp(createValidLoginForm(" ", "pass"), createBindingResult(),
+				model, redirectAttributes);
+		assertEquals("signUp", viewName);
+		verify(model, times(1)).addAttribute("error", expectedErrorMessage);
+	}
+	
+	/*
+	 * 項番13
+	 */
+	@Test
+	void testSignUpPasswordBlankCheck() {
+		String expectedErrorMessage ="パスワードは入力必須です。";
+		String viewName = loginController.signUp(createValidLoginForm("test", " "), createBindingResult(),
+				model, redirectAttributes);
+		assertEquals("signUp", viewName);
+		verify(model, times(1)).addAttribute("error", expectedErrorMessage);
+	}
 
 }

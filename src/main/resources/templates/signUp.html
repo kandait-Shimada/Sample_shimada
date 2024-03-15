@@ -22,7 +22,7 @@
 		<h1>新規登録画面</h1>
 		<!-- エラーメッセージ -->
 		<div th:if="${error}" class="error-message" style="color: red;">
-    	<p th:text="${error}"></p>
+    		<p th:utext="${error}"></p>
 		</div>
 		</div>
 		 <div class="row justify-content-center">
@@ -30,12 +30,12 @@
 		<!-- ユーザー名 -->
 		<div class=form-group>
 			<label for="userName">ユーザー名</label>
-			<input type="text" class="form-control" name="username">
+			<input type="text" class="form-control" name="username" placeholder="20文字以内でご入力ください">
 		</div>
 		<!-- パスワード -->
 		<div class="form-group">
 			<label for="password">パスワード</label>
-			<input type="text" class="form-control" name="password">
+			<input type="text" class="form-control" name="password" placeholder="20文字以内でご入力ください">
 		</div>
 		<!-- 登録ボタン -->
 		<input type="submit" value="新規登録" class="btn btn-primary w-100 mt-3">

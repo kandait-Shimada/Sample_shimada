@@ -1,5 +1,8 @@
 package com.example.demo.controller;
 
+
+
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 /*
@@ -37,72 +40,97 @@ public class LoginController {
 	public String login(String username, String password, Model model) {
 
 		try {
-		boolean isAuthenticated = loginService.authenticate(username, password);
+			boolean isAuthenticated = loginService.authenticate(username, password);
 
-		if (isAuthenticated) {
-			return "redirect:/sample";
-		} else {
-			model.addAttribute("error", "ユーザーネームとパスワードのどちらか、または両方が間違っています。");
+			if (isAuthenticated) {
+				return "redirect:/sample";
+			} else {
+				model.addAttribute("error", "ユーザーネームとパスワードのどちらか、または両方が間違っています。");
+				return "login";
+			}
+		} catch (Exception e) {
+			// データベース接続の例外
+			model.addAttribute("error", "データベースが確認できません。");
 			return "login";
 		}
-		}
-		catch (Exception e) {
-	        // データベース接続の例外
-	        model.addAttribute("error", "データベースが確認できません。");
-	        return "login";
-	    }
 	}
-	
+
 	// 新規登録処理
 	@GetMapping("/signUp")
 	public String newSignUp(Model model) {
-	    model.addAttribute("loginForm", new LoginForm());
-	    return "signUp";
+		model.addAttribute("loginForm", new LoginForm());
+		return "signUp";
 	}
-	
+
 	@PostMapping("/signUp")
-	public String signUp(@Validated LoginForm loginForm, BindingResult bindingResult, 
+	public String signUp(@Validated LoginForm loginForm, BindingResult bindingResult,
 			Model model, RedirectAttributes redirectAttributes) {
 
 		try {
-		// formからEntityに
-		Login login = new Login();
-				//idの自動生成実装で削除
-				//sample.setId(sampleForm.getId());
-		login.setUsername(loginForm.getUsername());
-		login.setPassword(loginForm.getPassword());
-		
-		//文字数チェック
-		if (bindingResult.hasErrors()) {
-			model.addAttribute("error", "20文字以内で入力してください。");
+			// formからEntityに
+			Login login = new Login();
+			login.setUsername(loginForm.getUsername());
+			login.setPassword(loginForm.getPassword());
+
+			StringBuilder errorMessage = new StringBuilder();
+
+			//空欄チェック
+			if (StringUtils.isBlank(loginForm.getUsername()) || StringUtils.isBlank(loginForm.getPassword())) {
+				// ユーザー名のエラーをチェック
+				if (StringUtils.isBlank(loginForm.getUsername())) {
+					errorMessage.append("ユーザー名は入力必須です。");
+				}
+				// パスワードのエラーをチェック
+				if (StringUtils.isBlank(loginForm.getPassword())) {
+					// 改行
+					if (errorMessage.length() > 0) {
+						errorMessage.append("<br>");
+					}
+					errorMessage.append("パスワードは入力必須です。");
+				}
+				model.addAttribute("error", errorMessage.toString());
+				return "signUp";
+			}
+
+			//文字数チェック
+			if (bindingResult.hasErrors()) {
+				// ユーザー名のエラーをチェック
+				if (bindingResult.hasFieldErrors("username")) {
+					errorMessage.append("ユーザー名は20文字以内で入力してください。");
+				}
+				// パスワードのエラーをチェック
+				if (bindingResult.hasFieldErrors("password")) {
+					// 改行
+					if (errorMessage.length() > 0) {
+						errorMessage.append("<br>");
+					}
+					errorMessage.append("パスワードは20文字以内で入力してください。");
+				}
+				model.addAttribute("error", errorMessage.toString());
+				return "signUp";
+			}
+
+			// ユーザー情報の登録
+			boolean check = loginService.registerUser(loginForm.getUsername(), loginForm.getPassword());
+			if (check) {
+				redirectAttributes.addFlashAttribute("registeredUsername", loginForm.getUsername());
+				String hidePassword = "*".repeat(loginForm.getPassword().length());
+				redirectAttributes.addFlashAttribute("registeredPassword", hidePassword);
+				return "redirect:/success";
+			} else {
+				// 登録が失敗した場合（ユーザー名が既に存在する場合）
+				model.addAttribute("error", "このユーザー名は既に使用されています。");
+				return "signUp";
+			}
+		} catch (Exception e) {
+			// データベース接続の例外
+			model.addAttribute("error", "データベースが確認できません。");
 			return "signUp";
-        }
-
-		
-
-        // ユーザー情報の登録
-		boolean check = loginService.registerUser(loginForm.getUsername(), loginForm.getPassword());
-        if (check) {
-        	redirectAttributes.addFlashAttribute("registeredUsername", loginForm.getUsername());
-        	String hidePassword = "*".repeat(loginForm.getPassword().length());
-            redirectAttributes.addFlashAttribute("registeredPassword", hidePassword);
-        	return "redirect:/success";
-        } else {
-            // 登録が失敗した場合（ユーザー名が既に存在する場合）
-            model.addAttribute("error", "このUSERNAMEは既に使用されています。");
-            return "signUp";
-        } 
-		}catch (Exception e) {
-            // データベース接続の例外
-            model.addAttribute("error", "データベースが確認できません。");
-            return "signUp";
-        }
 		}
-	
+	}
+
 	@GetMapping("/success")
-    public String registrationSuccess() {
-        return "success";
-    }
+	public String registrationSuccess() {
+		return "success";
+	}
 }
-
-
