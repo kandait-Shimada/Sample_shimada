@@ -88,14 +88,15 @@ public class LoginController {
 					}
 					errorMessage.append("パスワードは入力必須です。");
 				}
-				model.addAttribute("error", errorMessage.toString());
-				return "signUp";
 			}
 
 			//文字数チェック
 			if (bindingResult.hasErrors()) {
 				// ユーザー名のエラーをチェック
 				if (bindingResult.hasFieldErrors("username")) {
+					if (errorMessage.length() > 0) {
+						errorMessage.append("<br>");
+					}
 					errorMessage.append("ユーザー名は20文字以内で入力してください。");
 				}
 				// パスワードのエラーをチェック
@@ -106,10 +107,13 @@ public class LoginController {
 					}
 					errorMessage.append("パスワードは20文字以内で入力してください。");
 				}
+			}
+
+			if (errorMessage.length() > 0) {
 				model.addAttribute("error", errorMessage.toString());
 				return "signUp";
 			}
-
+			
 			// ユーザー情報の登録
 			boolean check = loginService.registerUser(loginForm.getUsername(), loginForm.getPassword());
 			if (check) {

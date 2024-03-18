@@ -3,6 +3,11 @@ package com.example.demo.signUp;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
@@ -54,7 +59,7 @@ class SignUpTest {
 	}
 
 	/*
-	 * テスト用文字数チェック（エラー発生時）
+	 * テスト用文字数チェック（単一エラー発生時）
 	 */
 	private BindingResult createBindingResultWithErrors(String fieldName, String errorCode, String defaultMessage) {
 		BindingResult bindingResult = mock(BindingResult.class);
@@ -64,6 +69,29 @@ class SignUpTest {
 		when(bindingResult.getFieldError()).thenReturn(fieldError);
 		return bindingResult;
 	}
+	
+	/*
+	 * テスト用文字数チェック（複数エラー発生時）
+	 */
+	private BindingResult createBindingResultWithUserNameAndPasswordErrors(Map<String, String> errors) {
+	    BindingResult bindingResult = mock(BindingResult.class);
+	    List<FieldError> fieldErrors = new ArrayList<>();
+
+	    for (Map.Entry<String, String> entry : errors.entrySet()) {
+	        FieldError fieldError = new FieldError("loginForm", entry.getKey(), null, false, new String[]{"Size"}, null, entry.getValue());
+	        fieldErrors.add(fieldError);
+	    }
+
+	    when(bindingResult.hasErrors()).thenReturn(!errors.isEmpty());
+	    when(bindingResult.getFieldErrors()).thenReturn(fieldErrors);
+	    errors.keySet().forEach(fieldName -> 
+	        when(bindingResult.hasFieldErrors(fieldName)).thenReturn(true)
+	    );
+
+	    return bindingResult;
+	}
+
+	
 
 	/*
 	 * 項番3
@@ -186,6 +214,18 @@ class SignUpTest {
 	 * 項番12
 	 */
 	@Test
+	void testSignUpUserNameAndPasswordNullCheck() {
+		String expectedErrorMessage ="ユーザー名は入力必須です。<br>パスワードは入力必須です。";
+		String viewName = loginController.signUp(createValidLoginForm("", ""), createBindingResult(),
+				model, redirectAttributes);
+		assertEquals("signUp", viewName);
+		verify(model, times(1)).addAttribute("error", expectedErrorMessage);
+	}
+	
+	/*
+	 * 項番13
+	 */
+	@Test
 	void testSignUpUserNameBlankCheck() {
 		String expectedErrorMessage ="ユーザー名は入力必須です。";
 		String viewName = loginController.signUp(createValidLoginForm(" ", "pass"), createBindingResult(),
@@ -195,7 +235,7 @@ class SignUpTest {
 	}
 	
 	/*
-	 * 項番13
+	 * 項番14
 	 */
 	@Test
 	void testSignUpPasswordBlankCheck() {
@@ -206,4 +246,61 @@ class SignUpTest {
 		verify(model, times(1)).addAttribute("error", expectedErrorMessage);
 	}
 
+	/*
+	 * 項番15
+	 */
+	@Test
+	void testSignUpUserNameAndPasswordBlankCheck() {
+		String expectedErrorMessage ="ユーザー名は入力必須です。<br>パスワードは入力必須です。";
+		String viewName = loginController.signUp(createValidLoginForm(" ", " "), createBindingResult(),
+				model, redirectAttributes);
+		assertEquals("signUp", viewName);
+		verify(model, times(1)).addAttribute("error", expectedErrorMessage);
+	}
+	
+	/*
+	 * 項番16
+	 */
+	@Test
+	void testSignUpUserNameAndPasswordCharacterLimitCheck() {
+	    Map<String, String> errors = new HashMap<>();
+	    errors.put("username", "ユーザー名は20文字以内で入力してください。");
+	    errors.put("password", "パスワードは20文字以内で入力してください。");
+
+	    String expectedErrorMessage = "ユーザー名は20文字以内で入力してください。<br>パスワードは20文字以内で入力してください。";
+	    BindingResult bindingResult = createBindingResultWithUserNameAndPasswordErrors(errors);
+
+	    String viewName = loginController.signUp(createValidLoginForm("characterlimitcheck23", "characterlimitcheck24"), bindingResult, model, redirectAttributes);
+
+	    assertEquals("signUp", viewName);
+	    verify(model, times(1)).addAttribute("error", expectedErrorMessage);
+	}
+
+	
+	/*
+	 * 項番17
+	 */
+	@Test
+	void testSignUpUserNameLimitAndPasswordNullCheck() {
+		BindingResult bindingResult = createBindingResultWithErrors("username", "Size", "ユーザー名は20文字以内で入力してください。");
+		String expectedErrorMessage ="パスワードは入力必須です。<br>ユーザー名は20文字以内で入力してください。";
+		String viewName = loginController.signUp(createValidLoginForm("characterlimitcheck25", ""), bindingResult,
+				model, redirectAttributes);
+		assertEquals("signUp", viewName);
+		verify(model, times(1)).addAttribute("error", expectedErrorMessage);
+	}
+	
+	/*
+	 * 項番18
+	 */
+	@Test
+	void testSignUpUserNameNullAndPasswordLimitCheck() {
+		BindingResult bindingResult = createBindingResultWithErrors("password", "Size", "パスワードは20文字以内で入力してください。");
+		String expectedErrorMessage ="ユーザー名は入力必須です。<br>パスワードは20文字以内で入力してください。";
+		String viewName = loginController.signUp(createValidLoginForm("", "characterlimitcheck26"), bindingResult,
+				model, redirectAttributes);
+		assertEquals("signUp", viewName);
+		verify(model, times(1)).addAttribute("error", expectedErrorMessage);
+	}
+	
 }
