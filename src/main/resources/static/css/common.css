@@ -18,6 +18,6 @@ a:hover {
 /* VSCを使用したマージのテスト */
 .container {
 	width: 100%;
-	margin: auto;
+　margin: auto;
 	overflow: hidden;
 }
