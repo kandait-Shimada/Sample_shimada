@@ -15,8 +15,9 @@ a:hover {
 	text-decoration: underline;
 }
 
+/* VSCを使用したマージのテスト */
 .container {
-	width: 80%;
+	width: 100%;
 	margin: auto;
 	overflow: hidden;
 }
