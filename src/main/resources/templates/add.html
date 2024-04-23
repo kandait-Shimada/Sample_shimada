@@ -1,0 +1,92 @@
+<!-- 顧客データ登録用 -->
+<!DOCTYPE html>
+<html xmlns:th="http://thymeleaf.org">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<!-- CSS読込 -->
+<link rel="stylesheet" th:href="@{/webjars/bootstrap/css/bootstrap.min.css}">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.11.2/css/all.css">
+<link rel="stylesheet" type="text/css" th:href="@{/css/reset.css}">
+<link rel="stylesheet" type="text/css" th:href="@{/css/common.css}">
+<link rel="stylesheet" type="text/css" th:href="@{/css/login.css}">
+<!-- JS読込 -->
+<script th:src="@{/webjars/jquery/jquery.min.js}" defer></script>
+<script th:src="@{/webjars/bootstrap/js/bootstrap.min.js}" defer></script>
+<title>顧客情報登録画面</title>
+</head>
+
+<body class="bg-light">
+<div class="container">
+	<div class="text-center">
+	<form class="signup-form" th:action="@{/add}" method="post" th:object="${loginForm}">
+		<h1>顧客情報登録画面</h1>
+		<!-- エラーメッセージ -->
+		<div th:if="${error}" class="error-message" style="color: red;">
+    		<p th:utext="${error}"></p>
+		</div>
+		</div>
+		 <div class="row justify-content-center">
+            <div class="col-md-6">
+		<!-- 顧客ID -->
+		<div class=form-group>
+			<label for="customerID">顧客ID</label>
+			<input type="disabled" class="form-control" name="customerID">
+		</div>
+		<!-- 顧客名 -->
+		<div class=form-group>
+			<label for="customername">顧客名</label>
+			<input type="text" class="form-control" name="customername" placeholder="20文字以内でご入力ください">
+		</div>
+		<!-- 電話番号① -->
+		<div class=form-group>
+			<label for="tel">電話番号①</label>
+			<input type="text" class="form-control" name="tel" placeholder="20文字以内でご入力ください">
+		</div>
+		<!-- 電話番号② -->
+		<div class=form-group>
+			<label for="tel">電話番号②</label>
+			<input type="text" class="form-control" name="tel">
+		</div>
+		<!-- 電話番号③ -->
+		<div class=form-group>
+			<label for="tel">電話番号③</label>
+			<input type="text" class="form-control" name="tel">
+		</div>
+		<!-- 電話番号④ -->
+		<div class=form-group>
+			<label for="tel">電話番号④</label>
+			<input type="text" class="form-control" name="tel">
+		</div>
+		<!-- 電話番号⑤ -->
+		<div class=form-group>
+			<label for="tel">電話番号⑤</label>
+			<input type="text" class="form-control" name="tel">
+		</div>
+		<!-- メール -->
+		<div class=form-group>
+			<label for="email">メール</label>
+			<input type="text" class="form-control" name="email" placeholder="100文字以内でご入力ください">
+		</div>
+		<!-- パスワード -->
+		<div class="form-group">
+			<label for="gender">性別</label>
+			<input type="text" class="form-control" name="gender" placeholder="20文字以内でご入力ください">
+		</div>
+		<!-- パスワード -->
+		<div class="form-group">
+			<label for="address">住所</label>
+			<input type="text" class="form-control" name="address" placeholder="20文字以内でご入力ください">
+		</div>
+		<!-- 登録ボタン -->
+		<input type="submit" value="新規登録" class="btn btn-primary w-100 mt-3">
+		</div>
+			</div>
+		</div>	
+	</form>	
+		
+</div>	
+</body>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+<script type="text/javascript" th:src="@{/js/changeTextPassword.js}"></script>
+</html>
