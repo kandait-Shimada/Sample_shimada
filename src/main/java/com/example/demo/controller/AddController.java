@@ -1,18 +1,10 @@
 package com.example.demo.controller;
 
+import java.util.ArrayList;
+import java.util.List;
 
-
-import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-/*
- * Login画面用のコントローラークラス
- * http://localhost:8080/login
- * 
- * UERNAMEとPASSWORDを入力して(中身は何でもよい)loginボタンを押下すると
- * 一覧画面に遷移する
- * 
- */
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
@@ -20,121 +12,61 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
-import com.example.demo.entity.Login;
-import com.example.demo.form.LoginForm;
-import com.example.demo.service.LoginService;
+import com.example.demo.entity.TelInfo;
+import com.example.demo.entity.UserInfo;
+import com.example.demo.form.CustomerInfoForm;
+import com.example.demo.service.AddService;
 
 @Controller
-public class LoginController {
+public class AddController {
 
 	@Autowired
-	private LoginService loginService;
+	private AddService addService;
 
-	// ログイン処理
-	@GetMapping("/login")
-	public String login() {
-		return "login";
+	@GetMapping
+	public String newAdd(Model model) {
+
+		model.addAttribute("userInfo", new UserInfo());
+		model.addAttribute("telInfos", List.of(new TelInfo()));
+		return "add";
 	}
 
-	@PostMapping("/login")
-	public String login(String username, String password, Model model) {
-
-		try {
-			boolean isAuthenticated = loginService.authenticate(username, password);
-
-			if (isAuthenticated) {
-				return "redirect:/sample";
-			} else {
-				model.addAttribute("error", "ユーザーネームとパスワードのどちらか、または両方が間違っています。");
-				return "login";
-			}
-		} catch (Exception e) {
-			// データベース接続の例外
-			model.addAttribute("error", "データベースが確認できません。");
-			return "login";
-		}
-	}
-
-	// 新規登録処理
-	@GetMapping("/signUp")
-	public String newSignUp(Model model) {
-		model.addAttribute("loginForm", new LoginForm());
-		return "signUp";
-	}
-
-	@PostMapping("/signUp")
-	public String signUp(@Validated LoginForm loginForm, BindingResult bindingResult,
+	@PostMapping("/add")
+	public String addFunction(@Validated CustomerInfoForm customerInfoForm, BindingResult bindingResult,
 			Model model, RedirectAttributes redirectAttributes) {
 
-		try {
-			// formからEntityに
-			Login login = new Login();
-			login.setUsername(loginForm.getUsername());
-			login.setPassword(loginForm.getPassword());
+		// formからEntityに(userInfoテーブル)
+		UserInfo userInfo = new UserInfo();
+		userInfo.setCustomername(customerInfoForm.getCustomername());
+		userInfo.setEmail(customerInfoForm.getEmail());
+		userInfo.setGender(customerInfoForm.getGender());
+		userInfo.setAddress(customerInfoForm.getAddress());
+		
+		UserInfo savedCustomerId = addService.add1(userInfo);
 
-			StringBuilder errorMessage = new StringBuilder();
-
-			//空欄チェック
-			if (StringUtils.isBlank(loginForm.getUsername()) || StringUtils.isBlank(loginForm.getPassword())) {
-				// ユーザー名のエラーをチェック
-				if (StringUtils.isBlank(loginForm.getUsername())) {
-					errorMessage.append("ユーザー名は入力必須です。");
-				}
-				// パスワードのエラーをチェック
-				if (StringUtils.isBlank(loginForm.getPassword())) {
-					// 改行
-					if (errorMessage.length() > 0) {
-						errorMessage.append("<br>");
-					}
-					errorMessage.append("パスワードは入力必須です。");
-				}
-			}
-
-			//文字数チェック
-			if (bindingResult.hasErrors()) {
-				// ユーザー名のエラーをチェック
-				if (bindingResult.hasFieldErrors("username")) {
-					if (errorMessage.length() > 0) {
-						errorMessage.append("<br>");
-					}
-					errorMessage.append("ユーザー名は20文字以内で入力してください。");
-				}
-				// パスワードのエラーをチェック
-				if (bindingResult.hasFieldErrors("password")) {
-					// 改行
-					if (errorMessage.length() > 0) {
-						errorMessage.append("<br>");
-					}
-					errorMessage.append("パスワードは20文字以内で入力してください。");
+		// formからEntityに(telInfoテーブル)
+		List<TelInfo> telInfos = new ArrayList<>();
+		
+		String[] tels = customerInfoForm.getTel();
+		int telOrder = 1;
+		
+		for(String tel : tels) {
+			if(tel != null && !tel.isEmpty()) {
+				TelInfo telInfo = new TelInfo();
+				telInfo.setCustomerID(savedCustomerId.getCustomerID()); 
+				telInfo.setTel(tel);
+				telInfo.setTelOrder(telOrder++);
+				telInfos.add(telInfo);
 				}
 			}
+		addService.add2(telInfos);
+		
+		StringBuilder successMessage = new StringBuilder();
 
-			if (errorMessage.length() > 0) {
-				model.addAttribute("error", errorMessage.toString());
-				return "signUp";
-			}
-			
-			// ユーザー情報の登録
-			boolean check = loginService.registerUser(loginForm.getUsername(), loginForm.getPassword());
-			if (check) {
-				redirectAttributes.addFlashAttribute("registeredUsername", loginForm.getUsername());
-				String hidePassword = "*".repeat(loginForm.getPassword().length());
-				redirectAttributes.addFlashAttribute("registeredPassword", hidePassword);
-				return "redirect:/success";
-			} else {
-				// 登録が失敗した場合（ユーザー名が既に存在する場合）
-				model.addAttribute("error", "このユーザー名は既に使用されています。");
-				return "signUp";
-			}
-		} catch (Exception e) {
-			// データベース接続の例外
-			model.addAttribute("error", "データベースが確認できません。");
-			return "signUp";
-		}
+		successMessage.append("登録に成功しました。");
+		
+		model.addAttribute("success", successMessage.toString());
+		return "add";
 	}
 
-	@GetMapping("/success")
-	public String registrationSuccess() {
-		return "success";
-	}
 }
