@@ -1,9 +1,14 @@
 package com.example.demo.entity;
 
+import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.annotation.LastModifiedDate;
+
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.Getter;
@@ -16,15 +21,23 @@ import lombok.Setter;
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
+@Table(name = "USERINFO")
 public class UserInfo {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private Integer customerID;
-	private String customername;
+	private Integer customer_ID;
+
+	private String customer_name;
 	private String email;
 	private String gender;
 	private String address;
-	private String insDate;
-	private String updDate;
+	
+	@Column(name = "ins_date",updatable = false)
+    @CreatedDate
+	private String ins_Date;
+	
+	@Column(name = "upd_date")
+	@LastModifiedDate
+	private String upd_Date;
 }

@@ -23,7 +23,7 @@ public class AddController {
 	@Autowired
 	private AddService addService;
 
-	@GetMapping
+	@GetMapping("/add")
 	public String newAdd(Model model) {
 
 		model.addAttribute("userInfo", new UserInfo());
@@ -37,7 +37,7 @@ public class AddController {
 
 		// formからEntityに(userInfoテーブル)
 		UserInfo userInfo = new UserInfo();
-		userInfo.setCustomername(customerInfoForm.getCustomername());
+		userInfo.setCustomer_name(customerInfoForm.getCustomername());
 		userInfo.setEmail(customerInfoForm.getEmail());
 		userInfo.setGender(customerInfoForm.getGender());
 		userInfo.setAddress(customerInfoForm.getAddress());
@@ -48,16 +48,20 @@ public class AddController {
 		List<TelInfo> telInfos = new ArrayList<>();
 		
 		String[] tels = customerInfoForm.getTel();
-		int telOrder = 1;
+		int telorder = 1;
 		
 		for(String tel : tels) {
-			if(tel != null && !tel.isEmpty()) {
+			if(tel == null) {
+				telorder++;
+				continue;
+			}
+			
 				TelInfo telInfo = new TelInfo();
-				telInfo.setCustomerID(savedCustomerId.getCustomerID()); 
+				telInfo.setCustomer_ID(savedCustomerId.getCustomer_ID()); 
 				telInfo.setTel(tel);
-				telInfo.setTelOrder(telOrder++);
+				telInfo.setTelorder(telorder++);
 				telInfos.add(telInfo);
-				}
+				
 			}
 		addService.add2(telInfos);
 		
