@@ -27,9 +27,9 @@ public class AddService {
 
 	public void add2(List<TelInfo> telInfos) {
 
-		for (TelInfo telInfo : telInfos) {
-			telInfoRepository.save(telInfo);
-		}
+		
+			telInfoRepository.saveAll(telInfos);
+		
 	}
 
 }

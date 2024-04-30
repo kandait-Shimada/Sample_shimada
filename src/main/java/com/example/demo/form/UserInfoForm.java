@@ -8,7 +8,7 @@ import lombok.Data;
 @Data
 public class UserInfoForm {
 
-	private Integer customerID;
+	private String customerID;
 	
 	@NotBlank
 	@Length(min=1, max=20)

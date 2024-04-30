@@ -51,17 +51,16 @@ public class AddController {
 		int telorder = 1;
 		
 		for(String tel : tels) {
-			if(tel == null) {
+			if(tel.isBlank()) {
 				telorder++;
 				continue;
-			}
-			
+			} else {
 				TelInfo telInfo = new TelInfo();
 				telInfo.setCustomer_ID(savedCustomerId.getCustomer_ID()); 
 				telInfo.setTel(tel);
 				telInfo.setTelorder(telorder++);
 				telInfos.add(telInfo);
-				
+				}
 			}
 		addService.add2(telInfos);
 		
