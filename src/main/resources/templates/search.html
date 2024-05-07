@@ -1,4 +1,3 @@
-<!-- 顧客データ登録用 -->
 <!DOCTYPE html>
 <html xmlns:th="http://thymeleaf.org">
 <head>
@@ -13,80 +12,92 @@
 <!-- JS読込 -->
 <script th:src="@{/webjars/jquery/jquery.min.js}" defer></script>
 <script th:src="@{/webjars/bootstrap/js/bootstrap.min.js}" defer></script>
-<title>顧客情報登録画面</title>
+<title>検索画面</title>
 </head>
 
 <body class="bg-light">
 <div class="container">
 	<div class="text-center">
-	<form class="signup-form" th:action="@{/add}" method="post" th:object="${loginForm}">
-		<h1>顧客情報登録画面</h1>
-		<!-- エラーメッセージ -->
-		<div th:if="${error}" class="error-message" style="color: red;">
-    		<p th:utext="${error}"></p>
-		</div>
-		</div>
-		 <div class="row justify-content-center">
-            <div class="col-md-6">
+	<h1>顧客情報検索</h1>
+    <form th:action="@{/search}" th:object="${customerInfo}" method="post">
 		<!-- 顧客ID -->
 		<div class=form-group>
 			<label for="customerID">顧客ID</label>
-			<input type="disabled" class="form-control" name="customerID">
+			<input type="disabled" class="form-control" name="customer_ID">
 		</div>
 		<!-- 顧客名 -->
 		<div class=form-group>
 			<label for="customername">顧客名</label>
 			<input type="text" class="form-control" name="customer_name" placeholder="20文字以内でご入力ください">
 		</div>
-		<!-- 電話番号① -->
+		<!-- 電話番号 -->
 		<div class=form-group>
-			<label for="tel">電話番号①</label>
+			<label for="tel">電話番号</label>
 			<input type="text" class="form-control" name="tel" placeholder="20文字以内でご入力ください">
 		</div>
-		<!-- 電話番号② -->
-		<div class=form-group>
-			<label for="tel">電話番号②</label>
-			<input type="text" class="form-control" name="tel">
-		</div>
-		<!-- 電話番号③ -->
-		<div class=form-group>
-			<label for="tel">電話番号③</label>
-			<input type="text" class="form-control" name="tel">
-		</div>
-		<!-- 電話番号④ -->
-		<div class=form-group>
-			<label for="tel">電話番号④</label>
-			<input type="text" class="form-control" name="tel">
-		</div>
-		<!-- 電話番号⑤ -->
-		<div class=form-group>
-			<label for="tel">電話番号⑤</label>
-			<input type="text" class="form-control" name="tel">
-		</div>
-		<!-- メール -->
+        <!-- メール -->
 		<div class=form-group>
 			<label for="email">メール</label>
 			<input type="text" class="form-control" name="email" placeholder="100文字以内でご入力ください">
 		</div>
-		<!-- 性別 -->
-		<div class="form-group">
-			<label for="gender">性別</label>
-			<input type="text" class="form-control" name="gender" placeholder="20文字以内でご入力ください">
+        <div>
+   			<label>性別:</label>
+        		<input type="radio" class="form-control" name="gender" value="男" id="male" />
+        		<label for="male">男</label>
+        		<input type="radio" class="form-control" name="gender" value="女" id="female" />
+        		<label for="female">女</label>
+        		<input type="radio"  class="form-control" name="gender" value="指定なし" id="unspecified" checked>
+        		<label for="unspecified">指定なし</label>
 		</div>
-		<!-- 住所 -->
+        <!-- 住所 -->
 		<div class="form-group">
 			<label for="address">住所</label>
 			<input type="text" class="form-control" name="address" placeholder="20文字以内でご入力ください">
 		</div>
-		<!-- 登録ボタン -->
-		<input type="submit" value="新規登録" class="btn btn-primary w-100 mt-3">
-		</div>
-			</div>
-		</div>	
-	</form>	
-		
-</div>	
+        <div>
+            <input type="submit" value="検索" class="btn btn-primary w-100 mt-3">
+        </div>
+    </form>
+	
+	<h2>検索結果</h2>
+    <table border="1">
+		<div class="text-center">
+        <thead>
+            <tr>
+<!--                <th>No.</th>-->
+                <th>顧客ID</th>
+                <th>顧客名</th>
+                <th>電話番号</th>
+                <th>メールアドレス</th>
+                <th>性別</th>
+                <th>住所</th>
+            </tr>
+        </thead>
+        <tbody>
+			 <tr th:if="${#lists.isEmpty(result)}">
+            	<td colspan="7">検索結果が見つかりません。</td>
+        	 </tr>
+             <tr th:each="obj : ${result}" th:if="${not #lists.isEmpty(result)}" th:object="${obj}" align="center">
+<!--                <td th:text="${Start.count}"></td>-->
+                <td>
+    				<a th:href="@{/updata(id=${obj.customer_ID})}" th:text="${obj.customer_ID}"></a>
+				</td>
+                <td th:text="${obj.customer_name}"></td>
+                <td>
+        			<span th:each="telInfo : ${obj.telInfos}" th:text="${telInfo.tel}" th:unless="${telInfo == null}"></span>
+    			</td>
+    			<td th:text="${obj.email}"></td>
+                <td th:text="${obj.gender}"></td>
+                <td th:text="${obj.address}"></td>
+            </tr>
+        </tbody>
+        </div>
+    </table>
 </body>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 <script type="text/javascript" th:src="@{/js/changeTextPassword.js}"></script>
-</html>
+</html>	
+	
+	
+	
+			
