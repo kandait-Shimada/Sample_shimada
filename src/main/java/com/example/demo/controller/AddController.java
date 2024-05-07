@@ -24,7 +24,7 @@ public class AddController {
 	private AddService addService;
 
 	@GetMapping("/add")
-	public String newAdd(Model model) {
+	public String addForm(Model model) {
 
 		model.addAttribute("userInfo", new UserInfo());
 		model.addAttribute("telInfos", List.of(new TelInfo()));

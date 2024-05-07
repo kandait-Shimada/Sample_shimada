@@ -22,7 +22,7 @@ public class UserInfo {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private String customer_ID;
+	private Integer customer_ID;
 
 	private String customer_name;
 	private String email;

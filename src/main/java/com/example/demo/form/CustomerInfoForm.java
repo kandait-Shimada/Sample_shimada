@@ -10,11 +10,11 @@ import lombok.Data;
 @Data
 public class CustomerInfoForm {
 
-	private Integer customerID;
+	private Integer customer_ID;
 
 	@NotBlank
 	@Length(min = 1, max = 20)
-	private String customername;
+	private String customer_name;
 
 	@NotBlank
 	@Length(min = 1, max = 100)
