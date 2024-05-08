@@ -1,6 +1,11 @@
 package com.example.demo.form;
 
+import java.util.List;
+
 import org.hibernate.validator.constraints.Length;
+
+import com.example.demo.entity.TelInfo;
+import com.example.demo.repository.AddValid;
 
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotEmpty;
@@ -28,9 +33,12 @@ public class CustomerInfoForm {
 	@Length(min = 1, max = 20)
 	private String address;
 
-	@NotEmpty
+	@NotEmpty(groups = { AddValid.class })
 //	@Range(max = 11)
 	@Size(min = 1, max = 5)
 	private String[] tel;
+	
+	@NotEmpty
+	private List<TelInfo> telInfos; 
 }
 

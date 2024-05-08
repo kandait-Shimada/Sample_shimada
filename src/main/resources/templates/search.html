@@ -80,7 +80,9 @@
              <tr th:each="obj : ${result}" th:if="${not #lists.isEmpty(result)}" th:object="${obj}" align="center">
 <!--                <td th:text="${Start.count}"></td>-->
                 <td>
-    				<a th:href="@{/updata(id=${obj.customer_ID})}" th:text="${obj.customer_ID}"></a>
+   			 		<form th:action="@{'/customer/updata/' + ${obj.customer_ID}}" method="get">
+       				<button type="submit" class="btn btn-link" th:text="${obj.customer_ID}"></button>
+    				</form>
 				</td>
                 <td th:text="${obj.customer_name}"></td>
                 <td>

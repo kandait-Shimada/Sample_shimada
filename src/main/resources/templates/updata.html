@@ -1,16 +1,68 @@
 <!DOCTYPE html>
 <html xmlns:th="http://thymeleaf.org">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-<!-- CSS読込 -->
-<link rel="stylesheet" th:href="@{/webjars/bootstrap/css/bootstrap.min.css}">
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.11.2/css/all.css">
-<link rel="stylesheet" type="text/css" th:href="@{/css/reset.css}">
-<link rel="stylesheet" type="text/css" th:href="@{/css/common.css}">
-<link rel="stylesheet" type="text/css" th:href="@{/css/login.css}">
-<!-- JS読込 -->
-<script th:src="@{/webjars/jquery/jquery.min.js}" defer></script>
-<script th:src="@{/webjars/bootstrap/js/bootstrap.min.js}" defer></script>
-<title>更新画面</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <title>顧客情報更新画面</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
 </head>
+<body>
+<div class="container mt-5">
+    <h2>顧客情報更新</h2>
+    <form th:action="@{/updata}" th:object="${customer}" method="post">
+        <div class="form-group">
+            <label for="customerId">顧客ID:</label>
+            <input type="text" class="form-control" id="customerId" th:field="*{customer_ID}" readonly>
+        </div>
+        <div class="form-group">
+            <label for="customerName">顧客名:</label>
+            <input type="text" class="form-control" id="customerName" th:field="*{customer_name}" required>
+        </div>
+        <div class="form-group">
+    		<label for="tel1">電話番号①:</label>
+    		<input type="text" class="form-control" id="tel1" th:field="*{telInfos[0].tel}" required>
+		</div>
+		<div class="form-group">
+    		<label for="tel2">電話番号②:</label>
+    			<input type="text" class="form-control" id="tel2" th:field="*{telInfos[1].tel}">
+		</div>
+		<div class="form-group">
+    		<label for="tel3">電話番号③:</label>
+    		<input type="text" class="form-control" id="tel3" th:field="*{telInfos[2].tel}">
+		</div>
+		<div class="form-group">
+		    <label for="tel4">電話番号④:</label>
+    		<input type="text" class="form-control" id="tel4" th:field="*{telInfos[3].tel}">
+		</div>
+		<div class="form-group">
+   			<label for="tel5">電話番号⑤:</label>
+    		<input type="text" class="form-control" id="tel5" th:field="*{telInfos[4].tel}">
+		</div>
+        <div class="form-group">
+            <label for="email">メールアドレス:</label>
+            <input type="email" class="form-control" id="email" th:field="*{email}" required>
+        </div>
+        <div class="form-group">
+            <label>性別:</label>
+            <div>
+                <input type="radio" th:field="*{gender}" value="男" id="male">
+                <label for="male">男</label>
+                <input type="radio" th:field="*{gender}" value="女" id="female">
+                <label for="female">女</label>
+            </div>
+        </div>
+        <div class="form-group">
+            <label for="address">住所:</label>
+            <input type="text" class="form-control" id="address" th:field="*{address}" required>
+        </div>
+        <button type="submit" class="btn btn-primary">更新</button>
+        <div class="logout-container">
+            <a href="#" th:href="@{/search}" class="logout-button">戻る</a>
+        </div>
+    </form>
+</div>
+</body>
+</html>

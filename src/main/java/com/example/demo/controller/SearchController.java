@@ -56,21 +56,5 @@ public class SearchController {
         return "search";
     }
 	
-//	String customer_ID = customerInfoForm.getCustomer_ID();
-//	String customer_name = customerInfoForm.getCustomer_name();
-//	String[] formTel = customerInfoForm.getTel();
-//	String tel = null;
-//	
-//	if(formTel != null && formTel.length > 0) {
-//		tel = formTel[0];
-//	}
-//	
-//	String email = customerInfoForm.getEmail();
-//    String gender = customerInfoForm.getGender();
-//    String check = "指定なし";
-//    
-//    if(gender.equals(check)) {
-//    	gender = null;
-//    }
-//    String address = customerInfoForm.getAddress();
+
 }

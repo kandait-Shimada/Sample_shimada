@@ -31,7 +31,7 @@
 		<!-- 顧客ID -->
 		<div class=form-group>
 			<label for="customerID">顧客ID</label>
-			<input type="disabled" class="form-control" name="customerID">
+			<input type="text" class="form-control" name="customerID" readonly>
 		</div>
 		<!-- 顧客名 -->
 		<div class=form-group>
@@ -69,9 +69,13 @@
 			<input type="text" class="form-control" name="email" placeholder="100文字以内でご入力ください">
 		</div>
 		<!-- 性別 -->
-		<div class="form-group">
-			<label for="gender">性別</label>
-			<input type="text" class="form-control" name="gender" placeholder="20文字以内でご入力ください">
+		<div>
+   			<label>性別:</label>
+        		<input type="radio" class="form-control" name="gender" value="男" id="male" />
+        		<label for="male">男</label>
+        		<input type="radio" class="form-control" name="gender" value="女" id="female" />
+        		<label for="female">女</label>
+        	
 		</div>
 		<!-- 住所 -->
 		<div class="form-group">
@@ -82,7 +86,10 @@
 		<input type="submit" value="新規登録" class="btn btn-primary w-100 mt-3">
 		</div>
 			</div>
-		</div>	
+		</div>
+		<div class="logout-container">
+			<a href="#" th:href="@{/search}" class="logout-button">戻る</a>
+			</div>	
 	</form>	
 		
 </div>	

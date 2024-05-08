@@ -120,7 +120,7 @@ public class LoginController {
 				redirectAttributes.addFlashAttribute("registeredUsername", loginForm.getUsername());
 				String hidePassword = "*".repeat(loginForm.getPassword().length());
 				redirectAttributes.addFlashAttribute("registeredPassword", hidePassword);
-				return "redirect:/success";
+				return "search";
 			} else {
 				// 登録が失敗した場合（ユーザー名が既に存在する場合）
 				model.addAttribute("error", "このユーザー名は既に使用されています。");

@@ -15,6 +15,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import com.example.demo.entity.TelInfo;
 import com.example.demo.entity.UserInfo;
 import com.example.demo.form.CustomerInfoForm;
+import com.example.demo.repository.AddValid;
 import com.example.demo.service.AddService;
 
 @Controller
@@ -32,12 +33,12 @@ public class AddController {
 	}
 
 	@PostMapping("/add")
-	public String addFunction(@Validated CustomerInfoForm customerInfoForm, BindingResult bindingResult,
+	public String addFunction(@Validated(AddValid.class) CustomerInfoForm customerInfoForm, BindingResult bindingResult,
 			Model model, RedirectAttributes redirectAttributes) {
 
 		// formからEntityに(userInfoテーブル)
 		UserInfo userInfo = new UserInfo();
-		userInfo.setCustomer_name(customerInfoForm.getCustomername());
+		userInfo.setCustomer_name(customerInfoForm.getCustomer_name());
 		userInfo.setEmail(customerInfoForm.getEmail());
 		userInfo.setGender(customerInfoForm.getGender());
 		userInfo.setAddress(customerInfoForm.getAddress());
