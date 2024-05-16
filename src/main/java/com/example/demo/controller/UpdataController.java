@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -12,6 +13,7 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.example.demo.entity.CustomerInfo;
@@ -21,31 +23,38 @@ import com.example.demo.form.CustomerInfoForm;
 import com.example.demo.service.UpdataService;
 
 @Controller
+@RequestMapping("/updata")
 public class UpdataController {
 
 	@Autowired
 	private UpdataService updataService;
-	
-	
-	//データを保持して更新画面に遷移
-	@GetMapping("/customer/updata/{customer_ID}")
-	public String updataFindById(Model model,@PathVariable Integer customer_ID) {
-		
+
+	@GetMapping("/{customer_ID}")
+	public String updataFindById(Model model, @PathVariable Integer customer_ID) {
 		Optional<CustomerInfo> result = updataService.findById(customer_ID);
-		    CustomerInfo customer = result.get();
-//		    while (customer.getTelInfos().size() < 5) {
-//	            customer.getTelInfos().add(new TelInfo()); 
-//	        }
-	        model.addAttribute("customer", customer);
-	    
-//		model.addAttribute("result", result.get());
-		return "updata";
+		StringBuilder errorMessage = new StringBuilder();
+		if (result.isPresent()) {
+			CustomerInfo customerInfo = result.get();
+			model.addAttribute("customer", customerInfo);
+			return "updata";
+		} else {
+			errorMessage.append("入力された顧客IDのデータが存在しません。");
+			model.addAttribute("error", errorMessage.toString());
+			return "search";
+		}
 	}
-	
+
+	@GetMapping
+	public String updataDirectURL() {
+		return "/search";
+	}
+
 	//画面から受け取った情報をDBに送信して更新
 	@PostMapping("/updata")
-	public String updataFunction(@Validated CustomerInfoForm customerInfoForm,  
-			BindingResult bindingResult, Model model, RedirectAttributes redirectAttributes) {
+	public String updataFunction(@Validated CustomerInfoForm customerInfoForm,
+			BindingResult bindingResult, Model model, RedirectAttributes redirectAttributes) throws Exception {
+
+		StringBuilder errorMessage = new StringBuilder();
 
 		// formからEntityに(userInfoテーブル)
 		UserInfo userInfo = new UserInfo();
@@ -54,16 +63,14 @@ public class UpdataController {
 		userInfo.setEmail(customerInfoForm.getEmail());
 		userInfo.setGender(customerInfoForm.getGender());
 		userInfo.setAddress(customerInfoForm.getAddress());
-		
-		updataService.updata1(userInfo);
-		
+
 		// formからEntityに(telInfoテーブル)
 		List<TelInfo> telInfos = customerInfoForm.getTelInfos();
 		List<TelInfo> addTelInfos = new ArrayList<>();
 		int telorder = 1;
 		for (TelInfo telInfo : telInfos) {
-	        if (telInfo.getTel() != null && !telInfo.getTel().isBlank()) {
-	        	telInfo.setCustomer_ID(customerInfoForm.getCustomer_ID()); 
+			if (telInfo.getTel() != null && !telInfo.getTel().isBlank()) {
+				telInfo.setCustomer_ID(customerInfoForm.getCustomer_ID());
 				telInfo.setTel(telInfo.getTel());
 				telInfo.setTelorder(telorder++);
 				addTelInfos.add(telInfo);
@@ -72,14 +79,158 @@ public class UpdataController {
 				continue;
 			}
 		}
-		updataService.updata2(addTelInfos);
-		
-		StringBuilder successMessage = new StringBuilder();
 
-		successMessage.append("更新に成功しました。");
-		
-//		model.addAttribute("success", successMessage.toString());
-		model.addAttribute("customer", customerInfoForm);
-		return "updata";
+		//入力内容チェック
+		String[] tels = new String[5];
+		int count = 0;
+		for (TelInfo telInfo : telInfos) {
+			tels[count] = telInfo.getTel();
+			count++;
+		}
+
+		String tel1Check = tels[0];
+		String tel2Check = tels[1];
+		String tel3Check = tels[2];
+		String tel4Check = tels[3];
+		String tel5Check = tels[4];
+		int telLimit = 11;
+
+		//必須項目の入力チェック
+		//顧客名
+		if (StringUtils.isBlank(customerInfoForm.getCustomer_name())) {
+			errorMessage.append("顧客名は入力必須です。");
+		}
+		//電話番号①
+		if (StringUtils.isBlank(tel1Check)) {
+			// 改行
+			if (errorMessage.length() > 0) {
+				errorMessage.append("<br>");
+			}
+			errorMessage.append("電話番号①は入力必須です。");
+		}
+		//メアド
+		if (StringUtils.isBlank(customerInfoForm.getEmail())) {
+			if (errorMessage.length() > 0) {
+				errorMessage.append("<br>");
+			}
+			errorMessage.append("メールアドレスは入力必須です。");
+		}
+		//性別
+		if (StringUtils.isBlank(customerInfoForm.getGender())) {
+			if (errorMessage.length() > 0) {
+				errorMessage.append("<br>");
+			}
+			errorMessage.append("性別は入力必須です。");
+		}
+		//住所
+		if (StringUtils.isBlank(customerInfoForm.getAddress())) {
+			if (errorMessage.length() > 0) {
+				errorMessage.append("<br>");
+			}
+			errorMessage.append("住所は入力必須です。");
+		}
+
+		//文字数チェック
+		//顧客名
+		if (bindingResult.hasErrors()) {
+			if (bindingResult.hasFieldErrors("customer_name")) {
+				if (errorMessage.length() > 0) {
+					errorMessage.append("<br>");
+				}
+				errorMessage.append("顧客名は20文字以内で入力してください。");
+			}
+			//メールアドレス
+			if (bindingResult.hasFieldErrors("email")) {
+				// 改行
+				if (errorMessage.length() > 0) {
+					errorMessage.append("<br>");
+				}
+				errorMessage.append("メールアドレスは100文字以内で入力してください。");
+			}
+			//性別
+			if (bindingResult.hasFieldErrors("gender")) {
+				// 改行
+				if (errorMessage.length() > 0) {
+					errorMessage.append("<br>");
+				}
+				errorMessage.append("性別はブラウザからボタンで入力してください。");
+			}
+			//住所
+			if (bindingResult.hasFieldErrors("address")) {
+				// 改行
+				if (errorMessage.length() > 0) {
+					errorMessage.append("<br>");
+				}
+				errorMessage.append("住所は20文字以内で入力してください。");
+			}
+		}
+		//電話番号①
+		if (telLimit < tel1Check.length() || !tel1Check.matches("\\d+")) {
+			if (errorMessage.length() > 0) {
+				errorMessage.append("<br>");
+			}
+			errorMessage.append("電話番号①は数字のみで11文字以内で入力してください。");
+		}
+		//電話番号②
+		if (!StringUtils.isBlank(tel2Check)) {
+			if (telLimit < tel2Check.length() || !tel2Check.matches("\\d+")) {
+				if (errorMessage.length() > 0) {
+					errorMessage.append("<br>");
+				}
+				errorMessage.append("電話番号②は数字のみで11文字以内で入力してください。");
+			}
+		}
+		//電話番号③
+		if (!StringUtils.isBlank(tel3Check)) {
+			if (telLimit < tel3Check.length() || !tel3Check.matches("\\d+")) {
+				if (errorMessage.length() > 0) {
+					errorMessage.append("<br>");
+				}
+				errorMessage.append("電話番号③は数字のみで11文字以内で入力してください。");
+			}
+		}
+		//電話番号④
+		if (!StringUtils.isBlank(tel4Check)) {
+			if (telLimit < tel4Check.length() || !tel4Check.matches("\\d+")) {
+				if (errorMessage.length() > 0) {
+					errorMessage.append("<br>");
+				}
+				errorMessage.append("電話番号④は数字のみで11文字以内で入力してください。");
+			}
+		}
+		//電話番号⑤
+		if (!StringUtils.isBlank(tel5Check)) {
+			if (telLimit < tel5Check.length() || !tel5Check.matches("\\d+")) {
+				if (errorMessage.length() > 0) {
+					errorMessage.append("<br>");
+				}
+				errorMessage.append("電話番号⑤は数字のみで11文字以内で入力してください。");
+			}
+		}
+		//入力内容にミスがあるときは戻る
+		if (errorMessage.length() > 0) {
+			model.addAttribute("error", errorMessage.toString());
+			model.addAttribute("customer", customerInfoForm);
+			return "updata";
+		}
+
+		try {
+			updataService.updateUserInfoAndTelInfo(userInfo, addTelInfos);
+
+			StringBuilder successMessage = new StringBuilder();
+
+			successMessage.append("顧客情報を更新しました。");
+
+			model.addAttribute("success", successMessage.toString());
+			model.addAttribute("customer", customerInfoForm);
+			return "updata";
+
+		} catch (Exception e) {
+			errorMessage.append("登録済みの電話番号は使用できません。");
+			model.addAttribute("error", errorMessage);
+			model.addAttribute("customer", customerInfoForm);
+			return "updata";
+		}
+
 	}
 }

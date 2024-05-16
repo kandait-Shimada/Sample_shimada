@@ -15,91 +15,134 @@
 <title>検索画面</title>
 </head>
 
-<body class="bg-light">
-<div class="container">
-	<div class="text-center">
-	<h1>顧客情報検索</h1>
-    <form th:action="@{/search}" th:object="${customerInfo}" method="post">
-		<!-- 顧客ID -->
-		<div class=form-group>
-			<label for="customerID">顧客ID</label>
-			<input type="disabled" class="form-control" name="customer_ID">
-		</div>
-		<!-- 顧客名 -->
-		<div class=form-group>
-			<label for="customername">顧客名</label>
-			<input type="text" class="form-control" name="customer_name" placeholder="20文字以内でご入力ください">
-		</div>
-		<!-- 電話番号 -->
-		<div class=form-group>
-			<label for="tel">電話番号</label>
-			<input type="text" class="form-control" name="tel" placeholder="20文字以内でご入力ください">
+<body class="bg-body">
+<div class="container-fluid"> 
+    <div class="text-center">
+        <h1>顧客情報検索</h1>
+        <form th:action="@{/search}" th:object="${customerInfo}" method="post">
+		<!-- エラーメッセージ -->
+        <div th:if="${error}" class="error-message" style="color: red;">
+        	<p th:utext="${error}"></p>
+        </div>	
+        <!-- 顧客ID -->
+		<div class="row form-group">
+            <label for="customerID" class="col-sm-2 col-form-label">顧客ID</label>
+            <div class="col-sm-7">
+            <input type="number" class="form-control" name="customer_ID" pattern="\d*" placeholder="数字でご入力ください">
+            </div>
+        </div>
+        <!-- 顧客名 -->
+        <div class="form-group row">
+            <label for="customername" class="col-md-2 col-form-label">顧客名</label>
+            <div class="col-md-7">
+            <input type="text" class="form-control" name="customer_name" placeholder="20文字以内でご入力ください">
+            </div>
+        </div>
+        <!-- 電話番号 -->
+		<div class="form-group row">
+			<label for="tel" class="col-sm-2 col-form-label">電話番号</label>
+			<div class="col-sm-7">
+			<input type="tel" class="form-control" name="tel" pattern="\d*" placeholder="11文字以内の数字でご入力ください">
+			</div>
 		</div>
         <!-- メール -->
-		<div class=form-group>
-			<label for="email">メール</label>
-			<input type="text" class="form-control" name="email" placeholder="100文字以内でご入力ください">
-		</div>
-        <div>
-   			<label>性別:</label>
-        		<input type="radio" class="form-control" name="gender" value="男" id="male" />
-        		<label for="male">男</label>
-        		<input type="radio" class="form-control" name="gender" value="女" id="female" />
-        		<label for="female">女</label>
-        		<input type="radio"  class="form-control" name="gender" value="指定なし" id="unspecified" checked>
-        		<label for="unspecified">指定なし</label>
-		</div>
-        <!-- 住所 -->
-		<div class="form-group">
-			<label for="address">住所</label>
-			<input type="text" class="form-control" name="address" placeholder="20文字以内でご入力ください">
-		</div>
-        <div>
-            <input type="submit" value="検索" class="btn btn-primary w-100 mt-3">
+        <div class="form-group row">
+             <label for="email" class="col-md-2 col-form-label">メールアドレス</label>
+             <div class="col-md-7">
+             <input type="text" class="form-control" name="email" placeholder="100文字以内でご入力ください">
+             </div>
         </div>
-    </form>
-	
-	<h2>検索結果</h2>
-    <table border="1">
-		<div class="text-center">
-        <thead>
-            <tr>
-<!--                <th>No.</th>-->
-                <th>顧客ID</th>
-                <th>顧客名</th>
-                <th>電話番号</th>
-                <th>メールアドレス</th>
-                <th>性別</th>
-                <th>住所</th>
-            </tr>
-        </thead>
-        <tbody>
-			 <tr th:if="${#lists.isEmpty(result)}">
-            	<td colspan="7">検索結果が見つかりません。</td>
-        	 </tr>
-             <tr th:each="obj : ${result}" th:if="${not #lists.isEmpty(result)}" th:object="${obj}" align="center">
-<!--                <td th:text="${Start.count}"></td>-->
+            <!-- 性別 -->
+            <div class="form-group row">
+                <label class="col-md-2 col-form-label">性別</label>
+                <div class="col-md-8">
+                    <div class="form-check form-check-inline">
+                        <input class="form-check-input" type="radio" name="gender" id="male" value="男">
+                        <label class="form-check-label" for="male">男</label>
+                    </div>
+                    <div class="form-check form-check-inline">
+                        <input class="form-check-input" type="radio" name="gender" id="female" value="女">
+                        <label class="form-check-label" for="female">女</label>
+                    </div>
+                    <div class="form-check form-check-inline">
+                        <input class="form-check-input" type="radio" name="gender" id="unspecified" value="指定なし" checked>
+                        <label class="form-check-label" for="unspecified">指定なし</label>
+                    </div>
+                </div>
+            </div>
+            <!-- 住所 -->
+        <div class="form-group row">
+			<label for="address"  class="col-sm-2 col-form-label">住所</label>
+			<div class="col-sm-7">
+			<input type="text" class="form-control" name="address" placeholder="20文字以内でご入力ください">
+			</div>
+		</div>
+    	<div class="container">
+    <!-- ボタン行 -->
+    <div class="row align-items-center">
+        <!-- 新規登録用ボタン、左に配置 -->
+        <div class="col-md-2">
+            <a href="#" th:href="@{/add}" class="btn btn-secondary">追加</a>
+        </div>
+        <!-- 検索ボタン、中央配置のために左右のカラムでバランスを取る -->
+        <div class="col-md-8 text-center">
+            <button type="submit" class="btn btn-primary">検索</button>
+        </div>
+        <!-- 右側の空のカラム -->
+        <div class="col-md-2"></div>
+    </div>
+</div>
+
+
+     
+        <hr>
+        <div th:if="${result != null}">
+        <h2>検索結果</h2>
+        <tr th:if="${#lists.isEmpty(result)}">
+			<div class="error-message" style="color: black;">
+            <p th:utext="検索結果が見つかりません。"></p>
+			<div>	
+        </tr>
+        <!-- 検索結果テーブル -->
+        <div class="table-responsive" th:if="${!#lists.isEmpty(result)}">
+            <table class="table">
+                <thead>
+                    <tr>
+						<th>No.</th>
+                        <th>顧客ID</th>
+                        <th>顧客名</th>
+                        <th>電話番号</th>
+                        <th>メールアドレス</th>
+                        <th>性別</th>
+                        <th>住所</th>
+                    </tr>
+                </thead>
+                <tbody>
+             <tr th:each="obj, status : ${result}" th:if="${not #lists.isEmpty(result)}" th:object="${obj}" align="center">
+                <td th:text="${status.index + 1}"></td>
                 <td>
-   			 		<form th:action="@{'/customer/updata/' + ${obj.customer_ID}}" method="get">
-       				<button type="submit" class="btn btn-link" th:text="${obj.customer_ID}"></button>
-    				</form>
+   			 		 <a th:href="@{/updata/{customer_ID}(customer_ID=${obj.customer_ID})}" th:text="${obj.customer_ID}"></a>
+                </td>
+    				
 				</td>
                 <td th:text="${obj.customer_name}"></td>
                 <td>
-        			<span th:each="telInfo : ${obj.telInfos}" th:text="${telInfo.tel}" th:unless="${telInfo == null}"></span>
-    			</td>
+    				<div th:each="telInfo, telStatus : ${obj.telInfos}">
+            			<span th:text="${telInfo.tel}" class="tel-number"
+                  		th:classappend="${#lists.size(obj.telInfos) > 1 ? 'tel-bg-color-' + (telStatus.index % 5 + 1) : ''}"></span>
+        			</div>
+				</td>
     			<td th:text="${obj.email}"></td>
                 <td th:text="${obj.gender}"></td>
                 <td th:text="${obj.address}"></td>
             </tr>
         </tbody>
+            </table>
         </div>
-    </table>
-</body>
+    </div>
+    </div>
+</div>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 <script type="text/javascript" th:src="@{/js/changeTextPassword.js}"></script>
-</html>	
-	
-	
-	
-			
+</body>
+</html>

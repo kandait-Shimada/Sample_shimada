@@ -11,58 +11,121 @@
 </head>
 <body>
 <div class="container mt-5">
-    <h2>顧客情報更新</h2>
+	<div class="text-center">
+    <h1>顧客情報更新</h1>
+    <div th:if="${error}" class="error-message" style="color: red;">
+                <p th:utext="${error}"></p>
+    </div>
     <form th:action="@{/updata}" th:object="${customer}" method="post">
-        <div class="form-group">
-            <label for="customerId">顧客ID:</label>
+        <!-- 顧客ID -->
+        <div class="row form-group">
+            <label for="customerId" class="col-sm-2 col-form-label">顧客ID</label>
+        <div class="col-sm-7">
             <input type="text" class="form-control" id="customerId" th:field="*{customer_ID}" readonly>
         </div>
-        <div class="form-group">
-            <label for="customerName">顧客名:</label>
+        </div>
+        <!-- 顧客名 -->
+        <div class="form-group row">
+            <label for="customerName" class="col-sm-2 col-form-label">*顧客名</label>
+        <div class="col-sm-7">
             <input type="text" class="form-control" id="customerName" th:field="*{customer_name}" required>
         </div>
-        <div class="form-group">
-    		<label for="tel1">電話番号①:</label>
-    		<input type="text" class="form-control" id="tel1" th:field="*{telInfos[0].tel}" required>
-		</div>
-		<div class="form-group">
-    		<label for="tel2">電話番号②:</label>
-    			<input type="text" class="form-control" id="tel2" th:field="*{telInfos[1].tel}">
-		</div>
-		<div class="form-group">
-    		<label for="tel3">電話番号③:</label>
-    		<input type="text" class="form-control" id="tel3" th:field="*{telInfos[2].tel}">
-		</div>
-		<div class="form-group">
-		    <label for="tel4">電話番号④:</label>
-    		<input type="text" class="form-control" id="tel4" th:field="*{telInfos[3].tel}">
-		</div>
-		<div class="form-group">
-   			<label for="tel5">電話番号⑤:</label>
-    		<input type="text" class="form-control" id="tel5" th:field="*{telInfos[4].tel}">
-		</div>
-        <div class="form-group">
-            <label for="email">メールアドレス:</label>
-            <input type="email" class="form-control" id="email" th:field="*{email}" required>
         </div>
-        <div class="form-group">
-            <label>性別:</label>
-            <div>
-                <input type="radio" th:field="*{gender}" value="男" id="male">
-                <label for="male">男</label>
-                <input type="radio" th:field="*{gender}" value="女" id="female">
-                <label for="female">女</label>
+        <!-- 電話番号① -->
+        <div class="form-group row">
+    		<label for="tel1" class="col-sm-2 col-form-label">*電話番号①</label>
+    	<div class="col-md-7">
+    		<input type="tel" class="form-control" id="tel1" th:field="*{telInfos[0].tel}" required>
+		</div>
+		<div class="col-md-3">
+        		<div class="form-text text-muted align-middle">＊「-」なしで入力してください</div>
+    		</div>
+		</div>
+		<!-- 電話番号② -->
+		<div class="form-group row">
+    		<label for="tel2" class="col-sm-2 col-form-label">電話番号②</label>
+    	<div class="col-md-7">
+    			<input type="tel" class="form-control" id="tel2" th:field="*{telInfos[1].tel}">
+		</div>
+		<div class="col-md-3">
+        		<div class="form-text text-muted align-middle">＊「-」なしで入力してください</div>
+    		</div>
+		</div>
+		<!-- 電話番号③ -->
+		<div class="form-group row">
+    		<label for="tel3" class="col-sm-2 col-form-label">電話番号③</label>
+    	<div class="col-md-7">
+    		<input type="tel" class="form-control" id="tel3" th:field="*{telInfos[2].tel}">
+		</div>
+		<div class="col-md-3">
+        		<div class="form-text text-muted align-middle">＊「-」なしで入力してください</div>
+    		</div>
+		</div>
+		<!-- 電話番号④ -->
+		<div class="form-group row">
+		    <label for="tel4" class="col-sm-2 col-form-label">電話番号④</label>
+    	<div class="col-md-7">
+    		<input type="tel" class="form-control" id="tel4" th:field="*{telInfos[3].tel}">
+		</div>
+		<div class="col-md-3">
+        		<div class="form-text text-muted align-middle">＊「-」なしで入力してください</div>
+    		</div>
+		</div>
+		<!-- 電話番号⑤ -->
+		<div class="form-group row">
+   			<label for="tel5" class="col-sm-2 col-form-label">電話番号⑤</label>
+    	<div class="col-md-7">
+    		<input type="tel" class="form-control" id="tel5" th:field="*{telInfos[4].tel}">
+		</div>
+		<div class="col-md-3">
+        		<div class="form-text text-muted align-middle">＊「-」なしで入力してください</div>
+    		</div>
+		</div>
+        <div class="form-group row">
+            <label for="email" class="col-sm-2 col-form-label">*メールアドレス</label>
+        <div class="col-sm-7">
+            <input type="text" class="form-control" id="email" th:field="*{email}" required>
+        </div>
+        </div>
+        <div class="form-group row">
+            <label class="col-sm-2 col-form-label">*性別</label>
+           	<div class="col-sm-8">
+               	<div class="form-check form-check-inline">
+            <input class="form-check-input" type="radio" name="gender" value="男" id="male" th:field="*{gender}"/>
+            <label class="form-check-label" for="male">男</label>
+            </div>
+            <div class="form-check form-check-inline">
+                <input class="form-check-input" type="radio" name="gender" value="女" id="female" th:field="*{gender}"/>
+                <label class="form-check-label" for="female">女</label>
             </div>
         </div>
-        <div class="form-group">
-            <label for="address">住所:</label>
+        </div>
+        <div class="form-group row">
+            <label for="address" class="col-sm-2 col-form-label">*住所</label>
+        <div class="col-sm-7"> 
             <input type="text" class="form-control" id="address" th:field="*{address}" required>
         </div>
-        <button type="submit" class="btn btn-primary">更新</button>
-        <div class="logout-container">
-            <a href="#" th:href="@{/search}" class="logout-button">戻る</a>
         </div>
+        <div class="row align-items-center">
+				<div class="col-md-2"></div>
+    		<!-- 登録ボタン -->
+    		<div class="col-md-8 text-center">
+        		<input type="submit" value="更新" class="btn btn-primary">
+    		</div>
+    		<!-- 戻るボタン -->
+   			<div class="col-md-1 text-right">
+        		<a href="#" th:href="@{/search}" class="btn btn-secondary">戻る</a>
+    		</div>
+			</div>
     </form>
-</div>
+    </div>
+    <hr>
+        <div th:if="${success != null}">
+        <div th:if="${success}" class="success-message">
+                <p th:utext="${success}"></p>
+        </div>
+		</div>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+<script type="text/javascript" th:src="@{/js/changeTextPassword.js}"></script>    
 </body>
 </html>
