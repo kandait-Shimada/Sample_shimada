@@ -16,7 +16,7 @@
     <div th:if="${error}" class="error-message" style="color: red;">
                 <p th:utext="${error}"></p>
     </div>
-    <form th:action="@{/updata}" th:object="${customer}" method="post">
+    <form th:action="@{/update}" th:object="${customer}" method="post">
         <!-- 顧客ID -->
         <div class="row form-group">
             <label for="customerId" class="col-sm-2 col-form-label">顧客ID</label>

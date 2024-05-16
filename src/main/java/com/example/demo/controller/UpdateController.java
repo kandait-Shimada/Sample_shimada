@@ -20,23 +20,23 @@ import com.example.demo.entity.CustomerInfo;
 import com.example.demo.entity.TelInfo;
 import com.example.demo.entity.UserInfo;
 import com.example.demo.form.CustomerInfoForm;
-import com.example.demo.service.UpdataService;
+import com.example.demo.service.UpdateService;
 
 @Controller
-@RequestMapping("/updata")
-public class UpdataController {
+@RequestMapping("/update")
+public class UpdateController {
 
 	@Autowired
-	private UpdataService updataService;
+	private UpdateService updateService;
 
 	@GetMapping("/{customer_ID}")
 	public String updataFindById(Model model, @PathVariable Integer customer_ID) {
-		Optional<CustomerInfo> result = updataService.findById(customer_ID);
+		Optional<CustomerInfo> result = updateService.findById(customer_ID);
 		StringBuilder errorMessage = new StringBuilder();
 		if (result.isPresent()) {
 			CustomerInfo customerInfo = result.get();
 			model.addAttribute("customer", customerInfo);
-			return "updata";
+			return "update";
 		} else {
 			errorMessage.append("入力された顧客IDのデータが存在しません。");
 			model.addAttribute("error", errorMessage.toString());
@@ -50,7 +50,7 @@ public class UpdataController {
 	}
 
 	//画面から受け取った情報をDBに送信して更新
-	@PostMapping("/updata")
+	@PostMapping("/update")
 	public String updataFunction(@Validated CustomerInfoForm customerInfoForm,
 			BindingResult bindingResult, Model model, RedirectAttributes redirectAttributes) throws Exception {
 
@@ -211,11 +211,11 @@ public class UpdataController {
 		if (errorMessage.length() > 0) {
 			model.addAttribute("error", errorMessage.toString());
 			model.addAttribute("customer", customerInfoForm);
-			return "updata";
+			return "update";
 		}
 
 		try {
-			updataService.updateUserInfoAndTelInfo(userInfo, addTelInfos);
+			updateService.updateUserInfoAndTelInfo(userInfo, addTelInfos);
 
 			StringBuilder successMessage = new StringBuilder();
 
@@ -223,13 +223,13 @@ public class UpdataController {
 
 			model.addAttribute("success", successMessage.toString());
 			model.addAttribute("customer", customerInfoForm);
-			return "updata";
+			return "update";
 
 		} catch (Exception e) {
 			errorMessage.append("登録済みの電話番号は使用できません。");
 			model.addAttribute("error", errorMessage);
 			model.addAttribute("customer", customerInfoForm);
-			return "updata";
+			return "update";
 		}
 
 	}

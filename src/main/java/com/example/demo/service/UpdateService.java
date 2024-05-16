@@ -15,7 +15,7 @@ import com.example.demo.repository.CustomerInfoRepository;
 import com.example.demo.repository.UserInfoRepository;
 
 @Service
-public class UpdataService {
+public class UpdateService {
 
 	@Autowired
 	private CustomerInfoRepository customerInfoRepository;

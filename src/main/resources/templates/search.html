@@ -121,7 +121,7 @@
              <tr th:each="obj, status : ${result}" th:if="${not #lists.isEmpty(result)}" th:object="${obj}" align="center">
                 <td th:text="${status.index + 1}"></td>
                 <td>
-   			 		 <a th:href="@{/updata/{customer_ID}(customer_ID=${obj.customer_ID})}" th:text="${obj.customer_ID}"></a>
+   			 		 <a th:href="@{/update/{customer_ID}(customer_ID=${obj.customer_ID})}" th:text="${obj.customer_ID}"></a>
                 </td>
     				
 				</td>
