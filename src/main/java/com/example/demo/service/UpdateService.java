@@ -33,16 +33,16 @@ public class UpdateService {
 
 	@Transactional(rollbackFor = Exception.class)
 	public void updateUserInfoAndTelInfo(UserInfo userInfo, List<TelInfo> telInfos) throws Exception {
-		updata1(userInfo);
-		updata2(telInfos);
+		update1(userInfo);
+		update2(telInfos);
 	}
 
-	public UserInfo updata1(UserInfo userInfo) throws Exception {
+	public UserInfo update1(UserInfo userInfo) throws Exception {
 
 		return userInfoRepository.save(userInfo);
 	}
 
-	public void updata2(List<TelInfo> telInfos) throws Exception {
+	public void update2(List<TelInfo> telInfos) throws Exception {
 		String sql = "MERGE INTO TELINFO t " +
 				"USING (SELECT ? AS tel, ? AS customer_ID, ? AS telorder FROM dual) s " +
 				"ON (t.customer_ID = s.customer_ID AND t.telorder = s.telorder) " +
