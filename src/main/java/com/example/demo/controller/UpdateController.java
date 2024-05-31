@@ -30,7 +30,7 @@ public class UpdateController {
 	private UpdateService updateService;
 
 	@GetMapping("/{customer_ID}")
-	public String updataFindById(Model model, @PathVariable Integer customer_ID) {
+	public String updateFindById(Model model, @PathVariable Integer customer_ID) {
 		Optional<CustomerInfo> result = updateService.findById(customer_ID);
 		StringBuilder errorMessage = new StringBuilder();
 		if (result.isPresent()) {
@@ -45,13 +45,13 @@ public class UpdateController {
 	}
 
 	@GetMapping
-	public String updataDirectURL() {
+	public String updateDirectURL() {
 		return "/search";
 	}
 
 	//画面から受け取った情報をDBに送信して更新
-	@PostMapping("/update")
-	public String updataFunction(@Validated CustomerInfoForm customerInfoForm,
+	@PostMapping
+	public String updateFunction(@Validated CustomerInfoForm customerInfoForm,
 			BindingResult bindingResult, Model model, RedirectAttributes redirectAttributes) throws Exception {
 
 		StringBuilder errorMessage = new StringBuilder();
@@ -165,11 +165,13 @@ public class UpdateController {
 			}
 		}
 		//電話番号①
-		if (telLimit < tel1Check.length() || !tel1Check.matches("\\d+")) {
-			if (errorMessage.length() > 0) {
-				errorMessage.append("<br>");
+		if (!StringUtils.isBlank(tel1Check)) {
+			if (telLimit < tel1Check.length() || !tel1Check.matches("\\d+")) {
+				if (errorMessage.length() > 0) {
+					errorMessage.append("<br>");
+				}
+				errorMessage.append("電話番号①は数字のみで11文字以内で入力してください。");
 			}
-			errorMessage.append("電話番号①は数字のみで11文字以内で入力してください。");
 		}
 		//電話番号②
 		if (!StringUtils.isBlank(tel2Check)) {
@@ -227,7 +229,7 @@ public class UpdateController {
 
 		} catch (Exception e) {
 			errorMessage.append("登録済みの電話番号は使用できません。");
-			model.addAttribute("error", errorMessage);
+			model.addAttribute("error", errorMessage.toString());
 			model.addAttribute("customer", customerInfoForm);
 			return "update";
 		}

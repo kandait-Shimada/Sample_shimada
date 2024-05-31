@@ -52,9 +52,6 @@ public class SearchController {
 				String tel1Check = formTel[0];
 				if (!StringUtils.isBlank(tel1Check)) {
 					if (!tel1Check.matches("\\d+")) {
-						if (errorMessage.length() > 0) {
-							errorMessage.append("<br>");
-						}
 						errorMessage.append("電話番号は数字のみで入力してください。");
 					}
 				}

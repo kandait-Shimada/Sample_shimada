@@ -144,11 +144,13 @@ public class AddController {
 			}
 		}
 		//電話番号①
-		if (telLimit < tel1Check.length() || !tel1Check.matches("\\d+")) {
-			if (errorMessage.length() > 0) {
-				errorMessage.append("<br>");
+		if (!StringUtils.isBlank(tel1Check)) {
+			if (telLimit < tel1Check.length() || !tel1Check.matches("\\d+")) {
+				if (errorMessage.length() > 0) {
+					errorMessage.append("<br>");
+				}
+				errorMessage.append("電話番号①は数字のみで11文字以内で入力してください。");
 			}
-			errorMessage.append("電話番号①は数字のみで11文字以内で入力してください。");
 		}
 		//電話番号②
 		if (!StringUtils.isBlank(tel2Check)) {
@@ -204,7 +206,7 @@ public class AddController {
 			return "add";
 		} catch (Exception e) {
 			errorMessage.append("登録済みの電話番号は使用できません。");
-			model.addAttribute("error", errorMessage);
+			model.addAttribute("error", errorMessage.toString());
 			return "add";
 
 		}
