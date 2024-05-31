@@ -86,10 +86,10 @@ public class UpdateControllerTest {
 	}
 
 	/*
-	 * 追加ケース項番x2
+	 * 追加ケース項番97
 	 */
 	@Test
-	public void updateFindByIdx2() {
+	public void updateFindById97() {
 
 		Integer customer_ID = 1;
 

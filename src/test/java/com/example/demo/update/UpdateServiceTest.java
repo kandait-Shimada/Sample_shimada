@@ -194,10 +194,10 @@ public class UpdateServiceTest {
 	}
 
 	/*
-	 * 項番x1追加ケース
+	 * 項番96追加ケース
 	 */
 	@Test
-	public void updateFindByIdx1() {
+	public void updateFindById96() {
 
 		Integer customer_ID = 2;
 
