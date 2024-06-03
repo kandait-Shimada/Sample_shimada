@@ -1300,4 +1300,40 @@ public class AddControllerTest {
 		}
 	}
 	
+	/*	
+	 * 項番98追加ケース 未入力チェック文字数チェック同時発生時
+	 */
+	@Test
+	public void addFunction98() {
+
+		CustomerInfoForm customerInfoForm = new CustomerInfoForm();
+		customerInfoForm.setCustomer_name("Test1234567890123456789");
+		customerInfoForm.setEmail("");
+		customerInfoForm.setGender("男");
+		customerInfoForm.setAddress("長崎県42");
+		customerInfoForm.setTel(new String[] { "40112345678", "", "", "", "40512345678" });
+
+		BindingResult result = new MapBindingResult(new HashMap<>(), "customerInfoForm");
+	
+		result.addError(new FieldError("customerInfoForm", "customer_name", "顧客名は20文字以内で入力してください。"));
+
+		RedirectAttributes redirectAttributes = new RedirectAttributesModelMap();
+
+		Map<String, Object> modelAttributes = new HashMap<>();
+		when(model.addAttribute(any(String.class), any(Object.class))).thenAnswer(invocation -> {
+			modelAttributes.put(invocation.getArgument(0), invocation.getArgument(1));
+			return model;
+		});
+
+		try {
+			String viewName = addController.addFunction(customerInfoForm, result, model, redirectAttributes);
+			assertEquals("add", viewName);
+			assertTrue(modelAttributes.containsKey("error"));
+			assertEquals("メールアドレスは入力必須です。<br>顧客名は20文字以内で入力してください。", modelAttributes.get("error"));
+
+		} catch (Exception e) {
+			fail();
+		}
+	}
+	
 }

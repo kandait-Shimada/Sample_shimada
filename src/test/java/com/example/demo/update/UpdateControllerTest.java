@@ -657,7 +657,7 @@ public class UpdateControllerTest {
 	}
 
 	/*
-	 * 項番28
+	 * 項番71
 	 */
 	@Test
 	public void updateFunction71() {
@@ -939,7 +939,7 @@ public class UpdateControllerTest {
 	}
 
 	/*
-	 * 項番34
+	 * 項番77
 	 */
 	@Test
 	public void updateFunction77() {
@@ -1832,6 +1832,54 @@ public class UpdateControllerTest {
 			assertEquals("update", viewName);
 			assertTrue(modelAttributes.containsKey("error"));
 			assertEquals("登録済みの電話番号は使用できません。", modelAttributes.get("error"));
+			assertEquals(customerInfoForm, modelAttributes.get("customer"));
+
+		} catch (Exception e) {
+			fail();
+		}
+	}
+	
+	/*
+	 * 項番99 追加ケース 項番99 
+	 */
+	@Test
+	public void updateFunction99() {
+
+		CustomerInfoForm customerInfoForm = new CustomerInfoForm();
+		customerInfoForm.setCustomer_ID(58);
+		customerInfoForm.setCustomer_name("Test12345678901234567");
+		customerInfoForm.setEmail("");
+		customerInfoForm.setGender("男");
+		customerInfoForm.setAddress("福井県58");
+		List<TelInfo> telInfos = new ArrayList<>();
+		String[] tels = new String[] { "58112345678", "", "", "", "" };
+		int telorder = 0;
+		for (String tel : tels) {
+				TelInfo telInfo = new TelInfo();
+				telInfo.setCustomer_ID(58);
+				telInfo.setTel(tel);
+				telInfo.setTelorder(telorder++);
+				telInfos.add(telInfo);
+		}
+		customerInfoForm.setTelInfos(telInfos);
+
+		MapBindingResult result = new MapBindingResult(new HashMap<>(), "customerInfoForm");
+
+		result.addError(new FieldError("customerInfoForm", "customer_name", "顧客名は20文字以内で入力してください。"));
+
+		RedirectAttributes redirectAttributes = new RedirectAttributesModelMap();
+
+		Map<String, Object> modelAttributes = new HashMap<>();
+		when(model.addAttribute(any(String.class), any(Object.class))).thenAnswer(invocation -> {
+			modelAttributes.put(invocation.getArgument(0), invocation.getArgument(1));
+			return model;
+		});
+
+		try {
+			String viewName = updateController.updateFunction(customerInfoForm, result, model, redirectAttributes);
+			assertEquals("update", viewName);
+			assertTrue(modelAttributes.containsKey("error"));
+			assertEquals("メールアドレスは入力必須です。<br>顧客名は20文字以内で入力してください。", modelAttributes.get("error"));
 			assertEquals(customerInfoForm, modelAttributes.get("customer"));
 
 		} catch (Exception e) {

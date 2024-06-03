@@ -38,43 +38,37 @@ public class SearchController {
 
 		StringBuilder errorMessage = new StringBuilder();
 
-			CustomerInfo customerInfo = new CustomerInfo();
-			customerInfo.setCustomer_ID(customerInfoForm.getCustomer_ID());
-			
-			customerInfo.setCustomer_name(customerInfoForm.getCustomer_name());
-			String[] formTel = customerInfoForm.getTel();
-			// CustomerInfoForm、CustomerInfoの型を合わせるために追加
-			List<TelInfo> telInfos = new ArrayList<>();
-			if (formTel != null && formTel.length > 0) {
-				TelInfo telInfo = new TelInfo();
-				telInfo.setTel(formTel[0]);
-				telInfos.add(telInfo);
-				String tel1Check = formTel[0];
-				if (!StringUtils.isBlank(tel1Check)) {
-					if (!tel1Check.matches("\\d+")) {
-						errorMessage.append("電話番号は数字のみで入力してください。");
-					}
+		CustomerInfo customerInfo = new CustomerInfo();
+		customerInfo.setCustomer_ID(customerInfoForm.getCustomer_ID());
+
+		customerInfo.setCustomer_name(customerInfoForm.getCustomer_name());
+		String[] formTel = customerInfoForm.getTel();
+		// CustomerInfoForm、CustomerInfoの型を合わせるために追加
+		List<TelInfo> telInfos = new ArrayList<>();
+		if (formTel != null && formTel.length > 0) {
+			TelInfo telInfo = new TelInfo();
+			telInfo.setTel(formTel[0]);
+			telInfos.add(telInfo);
+			String tel1Check = formTel[0];
+			if (!StringUtils.isBlank(tel1Check)) {
+				if (!tel1Check.matches("\\d+")) {
+					errorMessage.append("電話番号は数字のみで入力してください。");
 				}
 			}
-			customerInfo.setTelInfos(telInfos);
-			customerInfo.setEmail(customerInfoForm.getEmail());
-			customerInfo.setGender(customerInfoForm.getGender());
-			customerInfo.setAddress(customerInfoForm.getAddress());
-			
-			if (errorMessage.length() > 0) {
-				model.addAttribute("error", errorMessage.toString());
-				return "search";
-			}
-			
-			try {
-			List<CustomerInfo> searchResult = searchService.search(customerInfo);
-			model.addAttribute("result", searchResult);
-			return "search";
-		} catch (Exception e) {
-			errorMessage.append("エラーです。");
-			model.addAttribute("error", errorMessage);
+		}
+		customerInfo.setTelInfos(telInfos);
+		customerInfo.setEmail(customerInfoForm.getEmail());
+		customerInfo.setGender(customerInfoForm.getGender());
+		customerInfo.setAddress(customerInfoForm.getAddress());
+
+		if (errorMessage.length() > 0) {
+			model.addAttribute("error", errorMessage.toString());
 			return "search";
 		}
+
+		List<CustomerInfo> searchResult = searchService.search(customerInfo);
+		model.addAttribute("result", searchResult);
+		return "search";
 
 	}
 }
