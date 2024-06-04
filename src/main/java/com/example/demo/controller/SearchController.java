@@ -44,7 +44,7 @@ public class SearchController {
 		String[] formTel = customerInfoForm.getTel();
 		// CustomerInfoForm、CustomerInfoの型を合わせるために追加
 		List<TelInfo> telInfos = new ArrayList<>();
-		if (formTel != null && formTel.length > 0) {
+		if (formTel != null) {
 			TelInfo telInfo = new TelInfo();
 			telInfo.setTel(formTel[0]);
 			telInfos.add(telInfo);
