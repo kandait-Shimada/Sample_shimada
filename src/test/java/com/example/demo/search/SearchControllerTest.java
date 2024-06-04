@@ -93,4 +93,38 @@ public class SearchControllerTest {
 		assertTrue(modelAttributes.containsKey("error"));
 		assertEquals("電話番号は数字のみで入力してください。", modelAttributes.get("error"));
 	}
+	
+	/*
+	 * 項番100 追加ケース
+	 */
+	@Test
+	public void testSearchFunction100() throws Exception {
+		CustomerInfoForm customerInfoForm = new CustomerInfoForm();
+		customerInfoForm.setCustomer_ID(10);
+		customerInfoForm.setTel(new String[] { "10112345678" });
+		
+
+		CustomerInfo customerInfo = new CustomerInfo();
+		customerInfo.setCustomer_ID(10);
+		customerInfo.setCustomer_name("Test10");
+		TelInfo telInfo = new TelInfo();
+		telInfo.setTel("10112345678");
+		telInfo.setCustomerInfo(customerInfo);
+		customerInfo.setTelInfos(Arrays.asList(telInfo));
+		customerInfo.setEmail("test@10ca.co.jp");
+		customerInfo.setGender("女");
+		customerInfo.setAddress("群馬県10");
+
+		List<CustomerInfo> searchResult = Arrays.asList(customerInfo);
+		when(searchService.search(any(CustomerInfo.class))).thenReturn(searchResult);
+
+		BindingResult result = new MapBindingResult(new HashMap<>(), "customerInfoForm");
+
+		String viewName = searchController.searchFunction(customerInfoForm, result, model);
+
+		assertEquals("search", viewName);
+		verify(model, times(1)).addAttribute("result", searchResult);
+	}
+	
+	
 }

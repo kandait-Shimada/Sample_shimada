@@ -717,7 +717,7 @@ public class AddControllerTest {
 		customerInfoForm.setEmail("test@28ca.co.jp");
 		customerInfoForm.setGender("男");
 		customerInfoForm.setAddress("兵庫県28");
-		customerInfoForm.setTel(new String[] { "28112345678あ", "", "", "", "" });
+		customerInfoForm.setTel(new String[] { "2811234567あ", "", "", "", "" });
 
 		BindingResult result = new MapBindingResult(new HashMap<>(), "customerInfoForm");
 

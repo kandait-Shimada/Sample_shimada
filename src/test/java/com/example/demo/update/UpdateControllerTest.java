@@ -623,7 +623,7 @@ public class UpdateControllerTest {
 		customerInfoForm.setGender("男");
 		customerInfoForm.setAddress("東京都53");
 		List<TelInfo> telInfos = new ArrayList<>();
-		String[] tels = new String[] { " ", "", "", "", "" };
+		String[] tels = new String[] { null, "", "", "", "" };
 		int telorder = 0;
 		for (String tel : tels) {
 				TelInfo telInfo = new TelInfo();
@@ -849,7 +849,7 @@ public class UpdateControllerTest {
 
 		CustomerInfoForm customerInfoForm = new CustomerInfoForm();
 		customerInfoForm.setCustomer_ID(58);
-		customerInfoForm.setCustomer_name("Test12345678901234567");
+		customerInfoForm.setCustomer_name("Test58123456789012345");
 		customerInfoForm.setEmail("test@58ca.co.jp");
 		customerInfoForm.setGender("男");
 		customerInfoForm.setAddress("福井県58");
@@ -916,7 +916,7 @@ public class UpdateControllerTest {
 
 		BindingResult result = new MapBindingResult(new HashMap<>(), "customerInfoForm");
 
-		result.addError(new FieldError("customerInfoForm", "email", "メールは100文字以内で入力してください。"));
+		result.addError(new FieldError("customerInfoForm", "email", "メールアドレスは100文字以内で入力してください。"));
 
 		RedirectAttributes redirectAttributes = new RedirectAttributesModelMap();
 
@@ -1094,7 +1094,7 @@ public class UpdateControllerTest {
 		customerInfoForm.setGender("男");
 		customerInfoForm.setAddress("愛知県63");
 		List<TelInfo> telInfos = new ArrayList<>();
-		String[] tels = new String[] { "6311234567あ", "", "", "", "" };
+		String[] tels = new String[] { "631123456789", "", "", "", "" };
 		int telorder = 0;
 		for (String tel : tels) {
 				TelInfo telInfo = new TelInfo();

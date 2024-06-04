@@ -3,7 +3,6 @@ package com.example.demo.controller;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -50,10 +49,8 @@ public class SearchController {
 			telInfo.setTel(formTel[0]);
 			telInfos.add(telInfo);
 			String tel1Check = formTel[0];
-			if (!StringUtils.isBlank(tel1Check)) {
-				if (!tel1Check.matches("\\d+")) {
-					errorMessage.append("電話番号は数字のみで入力してください。");
-				}
+			if (!tel1Check.matches("\\d+")) {
+				errorMessage.append("電話番号は数字のみで入力してください。");
 			}
 		}
 		customerInfo.setTelInfos(telInfos);
