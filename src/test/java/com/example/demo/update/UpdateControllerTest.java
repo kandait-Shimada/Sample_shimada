@@ -67,6 +67,7 @@ public class UpdateControllerTest {
 		customerInfo.setAddress("青森県2");
 		TelInfo telInfo = new TelInfo();
 		telInfo.setTel("02112345678");
+		telInfo.setTelorder(1);
 		telInfo.setCustomerInfo(customerInfo);
 		customerInfo.setTelInfos(Arrays.asList(telInfo));
 
@@ -1885,5 +1886,46 @@ public class UpdateControllerTest {
 		} catch (Exception e) {
 			fail();
 		}
+	}
+	
+	/*
+	 * 項番101
+	 */
+	@Test
+	public void updateFindById101() {
+
+		Integer customer_ID = 49;
+
+		CustomerInfo customerInfo = new CustomerInfo();
+		customerInfo.setCustomer_ID(customer_ID);
+		customerInfo.setCustomer_name("Test49");
+		customerInfo.setEmail("test@49ca.co.jp");
+		customerInfo.setGender("男");
+		customerInfo.setAddress("愛媛県49");
+		List<TelInfo> telInfos = new ArrayList<>();
+		String[] tels = new String[] { "49112345678", "", "49312345678", "", "49512345678" };
+		int telorder = 0;
+		for (String tel : tels) {
+				TelInfo telInfo = new TelInfo();
+				telInfo.setCustomer_ID(49);
+				telInfo.setTel(tel);
+				telInfo.setTelorder(telorder++);
+				telInfos.add(telInfo);
+		}
+		customerInfo.setTelInfos(telInfos);
+
+		when(updateService.findById(customer_ID)).thenReturn(Optional.of(customerInfo));
+
+		Map<String, Object> modelAttributes = new HashMap<>();
+		when(model.addAttribute(anyString(), any())).thenAnswer(invocation -> {
+			modelAttributes.put(invocation.getArgument(0), invocation.getArgument(1));
+			return model;
+		});
+
+		String viewName = updateController.updateFindById(model, customer_ID);
+
+		assertEquals("update", viewName);
+		assertTrue(modelAttributes.containsKey("customer"));
+		assertEquals(customerInfo, modelAttributes.get("customer"));
 	}
 }
