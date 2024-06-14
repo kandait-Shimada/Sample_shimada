@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <title>顧客情報更新画面</title>
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+<!--	<link rel="stylesheet" type="text/css" th:href="@{/css/common.css}">-->
     <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
@@ -89,7 +90,7 @@
         </div>
         <div class="form-group row">
             <label class="col-sm-2 col-form-label">*性別</label>
-           	<div class="col-sm-8">
+           	<div class="col-sm-8" style="display: flex;justify-content:center;">
                	<div class="form-check form-check-inline">
             <input class="form-check-input" type="radio" name="gender" value="男" id="male" th:field="*{gender}"/>
             <label class="form-check-label" for="male">男</label>
@@ -106,17 +107,17 @@
             <input type="text" class="form-control" id="address" th:field="*{address}" required>
         </div>
         </div>
-        <div class="row align-items-center">
-				<div class="col-md-2"></div>
-    		<!-- 登録ボタン -->
-    		<div class="col-md-8 text-center">
-        		<input type="submit" value="更新" class="btn btn-primary">
-    		</div>
-    		<!-- 戻るボタン -->
-   			<div class="col-md-1 text-right">
-        		<a href="#" th:href="@{/search}" class="btn btn-secondary">戻る</a>
-    		</div>
-			</div>
+		<div class="row align-items-center" style="margin-left: -115px;">
+		    <div class="col-md-4"></div>
+		    <!-- 登録ボタン -->
+		    <div class="col-md-5 text-center">
+		        <div>
+		            <input type="submit" value="更新" class="btn btn-primary" style="margin-right: 10px;">
+		            <a href="/search" class="btn btn-secondary">戻る</a>
+		        </div>
+		    </div>
+		    <div class="col-md-3"></div> <!-- 追加: 余白調整 -->
+		</div>
     </form>
     </div>
     <hr>
